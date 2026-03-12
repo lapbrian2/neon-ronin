@@ -146,6 +146,49 @@ onMounted(() => {
       })
     })
 
+    // Per-panel content reveals with unique transforms
+    const panelOverlays = track.querySelectorAll('.panel-overlay, .panel-content')
+    panelOverlays.forEach((overlay, i) => {
+      const offsets = [
+        { y: 40, opacity: 0, rotation: 0 },
+        { y: 0, opacity: 0, x: 60 },
+        { y: 30, opacity: 0, scale: 0.95 },
+        { y: 0, opacity: 0, x: -40 },
+      ]
+      const initial = offsets[i] || offsets[0]
+      gsap.set(overlay, initial)
+
+      gsap.to(overlay, {
+        y: 0, x: 0, opacity: 1, scale: 1, rotation: 0,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: sectionRef.value,
+          start: () => `top+${i * window.innerWidth * 0.6} top`,
+          end: () => `top+${i * window.innerWidth * 0.6 + window.innerWidth * 0.5} top`,
+          scrub: 1,
+        },
+      })
+    })
+
+    // Neon signs pulse brighter as you scroll through alley panel
+    const neonSigns = track.querySelectorAll('.neon-sign, .neon-sign-2, .neon-sign-3')
+    neonSigns.forEach((sign, i) => {
+      gsap.fromTo(sign,
+        { opacity: 0.4, scale: 0.95 },
+        {
+          opacity: 1, scale: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.value,
+            start: () => `top+${window.innerWidth * 0.5} top`,
+            end: () => `top+${window.innerWidth * 1.2} top`,
+            scrub: 1,
+          },
+        }
+      )
+    })
+
     // Title reveal
     if (cityTitle.value) {
       splitTextReveal(cityTitle.value, {

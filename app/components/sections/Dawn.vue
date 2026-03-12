@@ -202,15 +202,19 @@ onMounted(() => {
       },
       '-=0.3'
     )
-    .to(
-      creditsRef.value,
-      {
-        opacity: 1,
-        duration: 1.2,
-        ease: 'power2.out',
-      },
-      '-=0.2'
-    )
+    .add(() => {
+      if (creditsRef.value) {
+        creditsRef.value.style.opacity = '1'
+        const creditEls = creditsRef.value.querySelectorAll('p, .credits-divider')
+        gsap.set(creditEls, { y: 15, opacity: 0 })
+        gsap.to(creditEls, {
+          y: 0, opacity: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power2.out',
+        })
+      }
+    }, '-=0.2')
     .to(
       topBtn.value,
       {
@@ -443,6 +447,22 @@ onMounted(() => {
   border-left: 1px solid var(--smoke);
   transform: rotate(-135deg);
   transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+
+/* Horizon pulse — warm light breathing */
+@keyframes horizon-pulse {
+  0%, 100% { opacity: 0.8; filter: blur(0px); }
+  50% { opacity: 1; filter: blur(1px); }
+}
+
+.dawn-horizon {
+  animation: horizon-pulse 5s ease-in-out infinite;
+}
+
+/* Credits text stagger entrance */
+.dawn-credits p {
+  will-change: transform, opacity;
 }
 
 @media (max-width: 768px) {

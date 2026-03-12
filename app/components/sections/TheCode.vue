@@ -8,6 +8,11 @@
     <!-- Impact flash overlay -->
     <div ref="flashRef" class="code-flash" />
 
+    <!-- CRT monitor effects -->
+    <div class="crt-scanline" />
+    <div class="crt-vignette" />
+    <div ref="monitorGlow" class="monitor-edge-glow" />
+
     <!-- Pinned container for kinetic text -->
     <div ref="pinRef" class="code-pin">
       <!-- Chapter marker -->
@@ -51,7 +56,7 @@
 
         <div ref="line5" class="code-line opacity-0 mt-8">
           <p class="font-serif text-[1.25rem] text-ash italic max-w-[40ch] mx-auto">
-            A ronin does not seek purpose. He walks until purpose finds him.
+            A ronin does not seek purpose. He walks until purpose finds him.<span class="cursor-blink">_</span>
           </p>
         </div>
       </div>
@@ -77,6 +82,7 @@ const line5 = ref<HTMLElement | null>(null)
 const accentLine = ref<HTMLElement | null>(null)
 const impactLine = ref<HTMLElement | null>(null)
 const flashRef = ref<HTMLElement | null>(null)
+const monitorGlow = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
@@ -89,6 +95,19 @@ onMounted(() => {
   gsap.set(line5.value, { y: 30 })
   gsap.set(accentLine.value, { scaleX: 0 })
   gsap.set(impactLine.value, { scaleX: 0 })
+
+  // Monitor edge glow fades in as section enters
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top 80%',
+      end: 'top 20%',
+      scrub: 1,
+    },
+  }).to(monitorGlow.value, {
+    opacity: 1,
+    duration: 1,
+  })
 
   // Pinned scroll-driven timeline
   const tl = createTimeline({
@@ -348,6 +367,72 @@ onMounted(() => {
   right: 2rem;
   border-bottom: 1px solid;
   border-right: 1px solid;
+}
+
+
+/* CRT terminal scanline */
+.crt-scanline {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.crt-scanline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 229, 255, 0.04), transparent);
+  animation: scan-move 4s linear infinite;
+}
+
+@keyframes scan-move {
+  0% { top: -1%; }
+  100% { top: 101%; }
+}
+
+/* CRT vignette — dark corners like an old monitor */
+.crt-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+/* Monitor edge glow — subtle neon border */
+.monitor-edge-glow {
+  position: absolute;
+  inset: 1.5rem;
+  z-index: 1;
+  pointer-events: none;
+  border: 1px solid rgba(0, 229, 255, 0.06);
+  box-shadow:
+    inset 0 0 60px rgba(0, 229, 255, 0.02),
+    0 0 30px rgba(0, 229, 255, 0.02);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Blinking cursor */
+.cursor-blink {
+  display: inline-block;
+  color: var(--neon-cyan);
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+  font-style: normal;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 @media (max-width: 768px) {
