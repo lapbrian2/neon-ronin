@@ -41,7 +41,7 @@ const skillsRef = ref<HTMLElement | null>(null)
 const { createTimeline, gsap } = useScrollAnimation()
 
 const skills = [
-  { name: 'Style DNA Extraction', desc: 'Reverse-engineering visual aesthetics into mathematical shader components. The art of seeing the algorithm beneath the surface.', kanji: '壱' },
+  { name: 'Creative Engineering', desc: 'Where aesthetic instinct meets systematic execution. Building at the intersection of art direction and architecture.', kanji: '壱' },
   { name: 'Systems Architecture', desc: 'Lean methodology applied with the precision of iaijutsu. Process discipline forged in manufacturing, wielded in creative systems.', kanji: '弐' },
   { name: 'Immersive Web Worlds', desc: 'Three.js environments that breathe. Scroll-driven narratives where the user moves through space, not past content.', kanji: '参' },
   { name: 'AI-Native Education', desc: 'Frameworks for teaching humans to think alongside machines. Not replacement — augmentation of creative instinct.', kanji: '肆' },
