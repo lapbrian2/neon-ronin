@@ -51,9 +51,9 @@ const projects = [
     desc: 'Particle simulations driven by emergent behavior algorithms. Thousands of autonomous agents flocking, scattering, and self-organizing into living digital art.',
   },
   {
-    title: 'Workflow X-Ray',
-    type: 'Consulting Diagnostic',
-    desc: 'Lean methodology applied to AI adoption pipelines. Tollgate frameworks, FMEA analysis, and remediation plans for creative organizations.',
+    title: 'Research Radar',
+    type: 'AI Research Intelligence',
+    desc: 'An autonomous sweep engine that discovers frontier AI practices, emerging architectures, and breakthrough papers — then surfaces what matters to a personal knowledge base.',
   },
   {
     title: 'Lonely Hollow',
