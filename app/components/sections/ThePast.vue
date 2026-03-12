@@ -1,7 +1,12 @@
 <template>
   <section ref="sectionRef" class="the-past section section--fullscreen ink-wash">
-    <!-- Ink wash background texture -->
+    <!-- Paper texture with grain -->
     <div class="ink-texture" />
+    <div class="paper-grain" />
+
+    <!-- Brush stroke decorations -->
+    <div class="brush-stroke brush-stroke--top" />
+    <div class="brush-stroke brush-stroke--bottom" />
 
     <div class="past-content">
       <!-- Chapter marker -->
@@ -19,6 +24,9 @@
         <span class="font-serif text-ink-gray text-sm">&#27494;&#22763;&#36947;</span>
       </div>
 
+      <!-- Ink splatter accent -->
+      <div ref="splatRef" class="ink-splatter opacity-0" />
+
       <!-- Poem/memory block -->
       <div ref="poemRef" class="past-poem mt-12">
         <p class="font-serif text-[1.25rem] text-ink-black leading-loose opacity-0 poem-line">
@@ -29,6 +37,22 @@
         </p>
         <p class="font-serif text-[1.25rem] text-ink-black leading-loose opacity-0 poem-line">
           and someone worth protecting.
+        </p>
+      </div>
+
+      <!-- Horizontal divider with ink bleed -->
+      <div ref="inkDivider" class="ink-divider mt-8 opacity-0" />
+
+      <!-- Second memory verse -->
+      <div ref="verse2Ref" class="past-verse2 mt-8">
+        <p class="font-serif text-[1.1rem] text-ink-gray leading-loose opacity-0 poem-line-2">
+          That life ended.
+        </p>
+        <p class="font-serif text-[1.1rem] text-ink-gray leading-loose opacity-0 poem-line-2">
+          Not with a battle — but with a letter,
+        </p>
+        <p class="font-serif text-[1.1rem] text-ink-gray leading-loose opacity-0 poem-line-2">
+          left unread on a wooden floor.
         </p>
       </div>
 
@@ -47,6 +71,7 @@
     <!-- Ink drip decoration -->
     <div class="ink-drip ink-drip--left" />
     <div class="ink-drip ink-drip--right" />
+    <div class="ink-drip ink-drip--center" />
   </section>
 </template>
 
@@ -55,14 +80,17 @@ const sectionRef = ref<HTMLElement | null>(null)
 const chapterRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
 const poemRef = ref<HTMLElement | null>(null)
+const verse2Ref = ref<HTMLElement | null>(null)
 const imageRef = ref<HTMLElement | null>(null)
+const splatRef = ref<HTMLElement | null>(null)
+const inkDivider = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
 onMounted(() => {
   if (!sectionRef.value) return
 
-  // Chapter reveal
+  // Chapter + title reveal
   createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
@@ -86,10 +114,23 @@ onMounted(() => {
       },
       '-=0.4'
     )
+    .to(
+      splatRef.value,
+      {
+        opacity: 0.15,
+        scale: 1,
+        duration: 0.6,
+        ease: 'power2.out',
+      },
+      '-=0.3'
+    )
 
-  // Poem lines stagger
+  gsap.set(splatRef.value, { scale: 0.5 })
+
+  // Poem lines stagger — first verse
   const poemLines = poemRef.value?.querySelectorAll('.poem-line')
   if (poemLines) {
+    gsap.set(poemLines, { y: 20 })
     createTimeline({
       scrollTrigger: {
         trigger: poemRef.value,
@@ -103,27 +144,58 @@ onMounted(() => {
       stagger: 0.4,
       ease: 'power2.out',
     })
-
-    // Set initial state
-    gsap.set(poemLines, { y: 20 })
   }
 
-  // Image frame reveal with clip-path
+  // Ink divider wipe
+  gsap.set(inkDivider.value, { scaleX: 0 })
+  createTimeline({
+    scrollTrigger: {
+      trigger: inkDivider.value,
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+  }).to(inkDivider.value, {
+    opacity: 1,
+    scaleX: 1,
+    duration: 1,
+    ease: 'power2.inOut',
+  })
+
+  // Second verse stagger
+  const verse2Lines = verse2Ref.value?.querySelectorAll('.poem-line-2')
+  if (verse2Lines) {
+    gsap.set(verse2Lines, { y: 15 })
+    createTimeline({
+      scrollTrigger: {
+        trigger: verse2Ref.value,
+        start: 'top 78%',
+        toggleActions: 'play none none none',
+      },
+    }).to(verse2Lines, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      stagger: 0.35,
+      ease: 'power2.out',
+    })
+  }
+
+  // Image frame reveal with ink-bleed clip-path
+  gsap.set(imageRef.value, {
+    clipPath: 'inset(50% 50% 50% 50%)',
+  })
   createTimeline({
     scrollTrigger: {
       trigger: imageRef.value,
       start: 'top 80%',
-      toggleActions: 'play none none none',
+      end: 'top 40%',
+      scrub: 1,
     },
   }).to(imageRef.value, {
     opacity: 1,
     clipPath: 'inset(0% 0% 0% 0%)',
     duration: 1.2,
     ease: 'power4.inOut',
-  })
-
-  gsap.set(imageRef.value, {
-    clipPath: 'inset(100% 0% 0% 0%)',
   })
 })
 </script>
@@ -137,6 +209,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 6rem 2rem;
 }
 
 .ink-texture {
@@ -144,15 +217,54 @@ onMounted(() => {
   inset: 0;
   background-image:
     radial-gradient(ellipse at 20% 50%, rgba(26, 24, 20, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 30%, rgba(26, 24, 20, 0.08) 0%, transparent 40%);
+    radial-gradient(ellipse at 80% 30%, rgba(26, 24, 20, 0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(26, 24, 20, 0.03) 0%, transparent 60%);
   pointer-events: none;
+}
+
+/* Paper grain texture */
+.paper-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Brush stroke decorations */
+.brush-stroke {
+  position: absolute;
+  width: 300px;
+  height: 8px;
+  background: linear-gradient(to right,
+    transparent,
+    rgba(26, 24, 20, 0.06) 15%,
+    rgba(26, 24, 20, 0.12) 40%,
+    rgba(26, 24, 20, 0.08) 70%,
+    transparent
+  );
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.brush-stroke--top {
+  top: 12%;
+  left: 5%;
+  transform: rotate(-3deg);
+}
+
+.brush-stroke--bottom {
+  bottom: 15%;
+  right: 8%;
+  transform: rotate(2deg);
+  width: 200px;
 }
 
 .past-content {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 2rem;
   max-width: 700px;
 }
 
@@ -166,8 +278,41 @@ onMounted(() => {
   opacity: 0.15;
 }
 
-.past-poem {
+/* Ink splatter accent */
+.ink-splatter {
+  position: absolute;
+  top: -1rem;
+  right: -2rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 40%,
+    rgba(26, 24, 20, 0.2) 0%,
+    rgba(26, 24, 20, 0.1) 30%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.past-poem,
+.past-verse2 {
   position: relative;
+}
+
+/* Ink divider */
+.ink-divider {
+  width: 180px;
+  height: 2px;
+  margin: 0 auto;
+  background: linear-gradient(to right,
+    transparent,
+    var(--ink-gray) 20%,
+    var(--ink-black) 50%,
+    var(--ink-gray) 80%,
+    transparent
+  );
+  transform-origin: center;
+  opacity: 0.3;
 }
 
 .past-image-frame {
@@ -222,8 +367,20 @@ onMounted(() => {
   height: 30%;
 }
 
+.ink-drip--center {
+  left: 55%;
+  top: 3%;
+  height: 25%;
+  opacity: 0.06;
+  width: 2px;
+}
+
 @media (max-width: 768px) {
   .past-vertical-text {
+    display: none;
+  }
+
+  .brush-stroke {
     display: none;
   }
 }

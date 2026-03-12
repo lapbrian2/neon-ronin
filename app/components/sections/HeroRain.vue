@@ -5,6 +5,12 @@
       <ThreeRainCanvas />
     </ClientOnly>
 
+    <!-- Scanlines overlay -->
+    <div class="hero-scanlines" />
+
+    <!-- Vignette overlay -->
+    <div class="hero-vignette" />
+
     <!-- Content overlay -->
     <div class="hero-content">
       <!-- Chapter marker -->
@@ -12,11 +18,15 @@
         Chapter I
       </span>
 
-      <!-- Title -->
-      <h1 ref="titleRef" class="hero-title font-display text-hero tracking-display uppercase leading-none">
-        <span class="text-light">NEON</span>
+      <!-- Title with glitch hover effect -->
+      <h1 ref="titleRef" class="hero-title font-display text-hero tracking-display uppercase leading-none opacity-0">
+        <span class="glitch-wrapper" data-cursor>
+          <span class="glitch-text text-light" data-text="NEON">NEON</span>
+        </span>
         <br />
-        <span class="neon-red neon-flicker">RONIN</span>
+        <span class="glitch-wrapper" data-cursor>
+          <span class="glitch-text neon-red neon-flicker" data-text="RONIN">RONIN</span>
+        </span>
       </h1>
 
       <!-- Subtitle -->
@@ -24,10 +34,17 @@
         A masterless blade in a city of electric ghosts.
       </p>
 
-      <!-- Scroll indicator -->
-      <div ref="scrollRef" class="hero-scroll opacity-0 mt-16">
-        <div class="scroll-line" />
-        <span class="font-body text-smoke text-xs uppercase tracking-[0.2em] mt-2 block">Scroll</span>
+      <!-- Decorative line -->
+      <div ref="decoLineRef" class="hero-deco-line mt-8 opacity-0" />
+
+      <!-- Scroll indicator (chevron style) -->
+      <div ref="scrollRef" class="hero-scroll opacity-0 mt-10">
+        <div class="scroll-chevrons">
+          <span class="chevron" />
+          <span class="chevron" />
+          <span class="chevron" />
+        </div>
+        <span class="font-body text-smoke text-xs uppercase tracking-[0.2em] mt-3 block">Scroll</span>
       </div>
     </div>
 
@@ -42,15 +59,21 @@ const chapterRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
 const subtitleRef = ref<HTMLElement | null>(null)
 const scrollRef = ref<HTMLElement | null>(null)
+const decoLineRef = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
 onMounted(() => {
   if (!sectionRef.value) return
 
-  // Entrance timeline
+  // Set initial states
+  gsap.set(titleRef.value, { y: 60, skewY: 3 })
+  gsap.set(subtitleRef.value, { y: 20 })
+  gsap.set(decoLineRef.value, { scaleX: 0 })
+
+  // Entrance timeline — cinematic reveal
   const entrance = createTimeline({
-    delay: 0.5,
+    delay: 2.8, // wait for preloader
   })
 
   entrance
@@ -60,12 +83,13 @@ onMounted(() => {
       duration: 0.8,
       ease: 'power2.out',
     })
-    .from(
+    .to(
       titleRef.value,
       {
-        y: 60,
-        opacity: 0,
-        duration: 1.2,
+        opacity: 1,
+        y: 0,
+        skewY: 0,
+        duration: 1.4,
         ease: 'power3.out',
       },
       '-=0.4'
@@ -81,6 +105,16 @@ onMounted(() => {
       '-=0.6'
     )
     .to(
+      decoLineRef.value,
+      {
+        opacity: 1,
+        scaleX: 1,
+        duration: 0.8,
+        ease: 'power2.inOut',
+      },
+      '-=0.4'
+    )
+    .to(
       scrollRef.value,
       {
         opacity: 1,
@@ -90,7 +124,7 @@ onMounted(() => {
       '-=0.3'
     )
 
-  // Scroll-driven fade out
+  // Scroll-driven fade out + parallax
   createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
@@ -99,8 +133,9 @@ onMounted(() => {
       scrub: 1,
     },
   }).to('.hero-content', {
-    y: -100,
+    y: -150,
     opacity: 0,
+    scale: 0.95,
     ease: 'none',
   })
 })
@@ -116,6 +151,36 @@ onMounted(() => {
   justify-content: center;
 }
 
+/* Scanlines overlay */
+.hero-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  opacity: 0.4;
+}
+
+/* Vignette overlay */
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.5) 80%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+}
+
 .hero-content {
   position: relative;
   z-index: 5;
@@ -129,6 +194,67 @@ onMounted(() => {
   transform: translateY(20px);
 }
 
+/* Glitch effect on hover */
+.glitch-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: none;
+}
+
+.glitch-text {
+  position: relative;
+}
+
+.glitch-wrapper:hover .glitch-text::before,
+.glitch-wrapper:hover .glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.glitch-wrapper:hover .glitch-text::before {
+  color: var(--neon-cyan);
+  clip-path: inset(0 0 60% 0);
+  transform: translate(-3px, -2px);
+  animation: glitch-shift 0.3s ease-in-out;
+}
+
+.glitch-wrapper:hover .glitch-text::after {
+  color: var(--neon-violet);
+  clip-path: inset(40% 0 0 0);
+  transform: translate(3px, 2px);
+  animation: glitch-shift-reverse 0.3s ease-in-out;
+}
+
+@keyframes glitch-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-5px, -3px); }
+  50% { transform: translate(3px, 1px); }
+  75% { transform: translate(-2px, 2px); }
+  100% { transform: translate(-3px, -2px); }
+}
+
+@keyframes glitch-shift-reverse {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(5px, 2px); }
+  50% { transform: translate(-3px, -1px); }
+  75% { transform: translate(2px, -2px); }
+  100% { transform: translate(3px, 2px); }
+}
+
+/* Decorative line */
+.hero-deco-line {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--neon-red), var(--neon-cyan), transparent);
+  transform-origin: center;
+}
+
+/* Gradient bottom fade */
 .hero-gradient {
   position: absolute;
   bottom: 0;
@@ -140,18 +266,42 @@ onMounted(() => {
   z-index: 4;
 }
 
-/* Scroll indicator */
-.scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--smoke), transparent);
-  margin: 0 auto;
-  animation: scroll-pulse 2s ease-in-out infinite;
+/* Scroll chevrons */
+.scroll-chevrons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
-@keyframes scroll-pulse {
-  0%, 100% { opacity: 0.3; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(1.3); }
+.chevron {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-right: 1px solid var(--smoke);
+  border-bottom: 1px solid var(--smoke);
+  transform: rotate(45deg);
+  animation: chevron-pulse 2s ease-in-out infinite;
+}
+
+.chevron:nth-child(1) {
+  animation-delay: 0s;
+  opacity: 0.3;
+}
+
+.chevron:nth-child(2) {
+  animation-delay: 0.15s;
+  opacity: 0.6;
+}
+
+.chevron:nth-child(3) {
+  animation-delay: 0.3s;
+  opacity: 1;
+}
+
+@keyframes chevron-pulse {
+  0%, 100% { opacity: 0.3; transform: rotate(45deg) translateY(0); }
+  50% { opacity: 1; transform: rotate(45deg) translateY(4px); }
 }
 
 /* Mobile */
@@ -163,6 +313,10 @@ onMounted(() => {
   .letterbox::before,
   .letterbox::after {
     height: 4vh;
+  }
+
+  .hero-scanlines {
+    opacity: 0.2;
   }
 }
 </style>

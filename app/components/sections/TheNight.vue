@@ -2,8 +2,13 @@
   <section ref="sectionRef" class="the-night section">
     <!-- Speed lines background -->
     <div ref="speedLines" class="speed-lines-container">
-      <div v-for="i in 12" :key="i" class="speed-line-ray" :style="{ transform: `rotate(${i * 30}deg)` }" />
+      <div v-for="i in 16" :key="i" class="speed-line-ray" :style="{ transform: `rotate(${i * 22.5}deg)` }" />
     </div>
+
+    <!-- Ember/spark particles (client-only canvas) -->
+    <ClientOnly>
+      <ThreeEmberCanvas />
+    </ClientOnly>
 
     <div class="night-content">
       <!-- Chapter marker -->
@@ -27,8 +32,10 @@
               <span class="text-smoke text-sm font-body">[ artwork: the confrontation ]</span>
             </div>
             <div class="panel-caption">
-              <span class="font-display text-[1.5rem] text-light uppercase tracking-display">DRAW</span>
+              <span class="font-display text-[1.5rem] text-light uppercase tracking-display panel-text-glow">DRAW</span>
             </div>
+            <!-- Panel flash overlay -->
+            <div class="panel-flash" />
           </div>
         </div>
 
@@ -37,6 +44,9 @@
             <div class="panel-placeholder">
               <span class="text-smoke text-sm font-body">[ artwork: the strike ]</span>
             </div>
+            <!-- Slash effect across panel -->
+            <div class="panel-slash" />
+            <div class="panel-flash" />
           </div>
         </div>
 
@@ -51,6 +61,13 @@
           </div>
         </div>
       </div>
+
+      <!-- Closing impact text -->
+      <div ref="impactRef" class="night-impact mt-16 opacity-0">
+        <p class="font-display text-[clamp(1.5rem,4vw,3rem)] tracking-display uppercase text-light">
+          THE BLADE <span class="neon-red">REMEMBERS</span>
+        </p>
+      </div>
     </div>
   </section>
 </template>
@@ -62,8 +79,9 @@ const titleRef = ref<HTMLElement | null>(null)
 const subtextRef = ref<HTMLElement | null>(null)
 const panelsRef = ref<HTMLElement | null>(null)
 const speedLines = ref<HTMLElement | null>(null)
+const impactRef = ref<HTMLElement | null>(null)
 
-const { createTimeline, gsap, splitTextReveal } = useScrollAnimation()
+const { createTimeline, gsap } = useScrollAnimation()
 
 onMounted(() => {
   if (!sectionRef.value) return
@@ -79,7 +97,7 @@ onMounted(() => {
   }).fromTo(
     speedLines.value,
     { opacity: 0, scale: 0.5 },
-    { opacity: 0.15, scale: 1.5, ease: 'power2.out' }
+    { opacity: 0.2, scale: 1.8, ease: 'power2.out' }
   )
 
   // Chapter + title entrance
@@ -97,7 +115,7 @@ onMounted(() => {
     .from(
       titleRef.value,
       {
-        scale: 1.3,
+        scale: 1.5,
         opacity: 0,
         duration: 0.8,
         ease: 'power3.out',
@@ -116,27 +134,71 @@ onMounted(() => {
   // Manga panels — stagger with unique transforms
   const panels = panelsRef.value?.querySelectorAll('.night-panel')
   if (panels) {
-    gsap.set(panels[0], { x: -60, rotation: -3 })
-    gsap.set(panels[1], { y: 60, scale: 0.9 })
-    gsap.set(panels[2], { x: 60, rotation: 3 })
+    gsap.set(panels[0], { x: -80, rotation: -5, scale: 0.85 })
+    gsap.set(panels[1], { y: 80, scale: 0.8 })
+    gsap.set(panels[2], { x: 80, rotation: 5, scale: 0.85 })
 
-    createTimeline({
+    const panelTl = createTimeline({
       scrollTrigger: {
         trigger: panelsRef.value,
         start: 'top 75%',
         toggleActions: 'play none none none',
       },
-    }).to(panels, {
+    })
+
+    panelTl.to(panels, {
       opacity: 1,
       x: 0,
       y: 0,
       rotation: 0,
       scale: 1,
-      duration: 0.8,
-      stagger: 0.2,
+      duration: 1,
+      stagger: 0.15,
       ease: 'power3.out',
     })
+
+    // Flash each panel sequentially after they land
+    const flashes = panelsRef.value?.querySelectorAll('.panel-flash')
+    if (flashes) {
+      panelTl.to(flashes, {
+        opacity: 0.3,
+        duration: 0.05,
+        stagger: 0.15,
+      }, '-=0.3')
+      panelTl.to(flashes, {
+        opacity: 0,
+        duration: 0.3,
+        stagger: 0.15,
+      })
+    }
+
+    // Slash effect on panel 2
+    const slash = panelsRef.value?.querySelector('.panel-slash')
+    if (slash) {
+      gsap.set(slash, { scaleX: 0 })
+      panelTl.to(slash, {
+        scaleX: 1,
+        duration: 0.3,
+        ease: 'power4.in',
+      }, '-=0.5')
+    }
   }
+
+  // Impact text
+  gsap.set(impactRef.value, { y: 30, scale: 0.95 })
+  createTimeline({
+    scrollTrigger: {
+      trigger: impactRef.value,
+      start: 'top 85%',
+      toggleActions: 'play none none none',
+    },
+  }).to(impactRef.value, {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.8,
+    ease: 'power3.out',
+  })
 })
 </script>
 
@@ -165,10 +227,10 @@ onMounted(() => {
 .speed-line-ray {
   position: absolute;
   width: 2px;
-  height: 120vh;
+  height: 150vh;
   background: linear-gradient(to bottom, transparent, var(--neon-red), transparent);
   transform-origin: center;
-  opacity: 0.3;
+  opacity: 0.2;
 }
 
 .night-content {
@@ -195,6 +257,11 @@ onMounted(() => {
   position: relative;
   overflow: hidden;
   border: 2px solid var(--smoke);
+  transition: border-color 0.3s ease;
+}
+
+.panel-inner:hover {
+  border-color: var(--neon-red);
 }
 
 .panel-placeholder {
@@ -222,6 +289,39 @@ onMounted(() => {
   left: 1rem;
   right: 1rem;
   text-align: center;
+}
+
+.panel-text-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+/* Panel flash overlay */
+.panel-flash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Slash effect */
+.panel-slash {
+  position: absolute;
+  top: 30%;
+  left: -10%;
+  right: -10%;
+  height: 3px;
+  background: linear-gradient(to right, transparent, white, var(--neon-red), white, transparent);
+  transform: rotate(-15deg) scaleX(0);
+  transform-origin: left center;
+  z-index: 4;
+  box-shadow: 0 0 15px rgba(255, 23, 68, 0.5), 0 0 30px rgba(255, 23, 68, 0.3);
+}
+
+/* Impact text */
+.night-impact {
+  will-change: transform, opacity;
 }
 
 @media (max-width: 768px) {

@@ -1,23 +1,35 @@
 <template>
-  <main class="neon-ronin">
-    <!-- Section 1: Rain — Hero -->
-    <SectionsHeroRain />
+  <div>
+    <!-- Preloader -->
+    <ClientOnly>
+      <PreloaderClient />
+    </ClientOnly>
 
-    <!-- Section 2: The City — Horizontal Scroll -->
-    <SectionsTheCity />
+    <!-- Custom cursor -->
+    <ClientOnly>
+      <CursorFollowClient />
+    </ClientOnly>
 
-    <!-- Section 3: The Past — Ink Wash Flashback -->
-    <SectionsThePast />
+    <main class="neon-ronin">
+      <!-- Section 1: Rain — Hero -->
+      <SectionsHeroRain />
 
-    <!-- Section 4: The Code — Kinetic Typography -->
-    <SectionsTheCode />
+      <!-- Section 2: The City — Horizontal Scroll -->
+      <SectionsTheCity />
 
-    <!-- Section 5: The Night — Action -->
-    <SectionsTheNight />
+      <!-- Section 3: The Past — Ink Wash Flashback -->
+      <SectionsThePast />
 
-    <!-- Section 6: Dawn — Resolution -->
-    <SectionsDawn />
-  </main>
+      <!-- Section 4: The Code — Kinetic Typography -->
+      <SectionsTheCode />
+
+      <!-- Section 5: The Night — Action -->
+      <SectionsTheNight />
+
+      <!-- Section 6: Dawn — Resolution -->
+      <SectionsDawn />
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
