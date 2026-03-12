@@ -13,6 +13,7 @@
 
       <div ref="principlesRef" class="principles-grid">
         <div v-for="(item, i) in principles" :key="i" class="principle-item">
+          <div class="principle-line" />
           <div class="principle-kanji">{{ item.kanji }}</div>
           <h3 class="principle-title">{{ item.title }}</h3>
           <p class="principle-text">{{ item.text }}</p>
@@ -60,22 +61,36 @@ onMounted(() => {
   if (!sectionRef.value) return
 
   gsap.set(headerRef.value, { opacity: 0, y: 60 })
-  const items = principlesRef.value?.querySelectorAll('.principle-item')
-  if (items) gsap.set(items, { opacity: 0, y: 40 })
 
-  createTimeline({
+  const lineEls = principlesRef.value?.querySelectorAll('.principle-line')
+  const kanjiEls = principlesRef.value?.querySelectorAll('.principle-kanji')
+  const titleEls = principlesRef.value?.querySelectorAll('.principle-title')
+  const textEls = principlesRef.value?.querySelectorAll('.principle-text')
+
+  if (lineEls) gsap.set(lineEls, { scaleX: 0, transformOrigin: 'left center' })
+  if (kanjiEls) gsap.set(kanjiEls, { opacity: 0, scale: 0.3 })
+  if (titleEls) gsap.set(titleEls, { opacity: 0, x: -20 })
+  if (textEls) gsap.set(textEls, { opacity: 0, y: 15 })
+
+  const tl = createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
       start: 'top 70%',
       toggleActions: 'play none none none',
     },
   })
-    .to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-    .to(items, {
-      opacity: 1, y: 0,
-      duration: 0.8, stagger: 0.2,
-      ease: 'power2.out',
-    }, '-=0.4')
+
+  tl.to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+
+  if (lineEls && kanjiEls && titleEls && textEls) {
+    for (let i = 0; i < lineEls.length; i++) {
+      const offset = i === 0 ? '-=0.3' : '-=0.5'
+      tl.to(lineEls[i], { scaleX: 1, duration: 0.6, ease: 'power2.inOut' }, offset)
+      tl.to(kanjiEls[i], { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, '-=0.3')
+      tl.to(titleEls[i], { opacity: 1, x: 0, duration: 0.4, ease: 'power2.out' }, '-=0.2')
+      tl.to(textEls[i], { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '-=0.2')
+    }
+  }
 })
 </script>
 
@@ -100,6 +115,10 @@ onMounted(() => {
   margin-top: 60px;
 }
 
+.principle-line {
+  width: 40px; height: 2px; background: var(--blood-red);
+  margin-bottom: 20px;
+}
 .principle-kanji {
   font-family: 'Noto Serif JP', serif;
   font-weight: 900;

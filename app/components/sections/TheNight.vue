@@ -46,9 +46,9 @@ const projects = [
     desc: 'A virtual exhibition space built in Three.js where art breathes and walls dissolve as you scroll through the collection.',
   },
   {
-    title: 'Style DNA System',
-    type: 'Methodology & Tool',
-    desc: '30+ artist extractions. A shader-based framework that treats every image as frozen computation and reverse-engineers the algorithm beneath.',
+    title: 'Murmuration Engine',
+    type: 'Generative Art System',
+    desc: 'Particle simulations driven by emergent behavior algorithms. Thousands of autonomous agents flocking, scattering, and self-organizing into living digital art.',
   },
   {
     title: 'Workflow X-Ray',
@@ -67,21 +67,31 @@ onMounted(() => {
 
   gsap.set(headerRef.value, { opacity: 0, y: 60 })
   const cards = projectsRef.value?.querySelectorAll('.project-card')
-  if (cards) gsap.set(cards, { opacity: 0, y: 40 })
+  if (cards) {
+    cards.forEach((card: Element, i: number) => {
+      const rotX = (i % 2 === 0) ? 8 : -8
+      const rotY = (i < 2) ? -5 : 5
+      gsap.set(card, { opacity: 0, y: 50, rotateX: rotX, rotateY: rotY, scale: 0.95 })
+    })
+  }
 
-  createTimeline({
+  const tl = createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
       start: 'top 70%',
       toggleActions: 'play none none none',
     },
   })
-    .to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-    .to(cards, {
-      opacity: 1, y: 0,
-      duration: 0.8, stagger: 0.15,
-      ease: 'power2.out',
+
+  tl.to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+
+  if (cards) {
+    tl.to(cards, {
+      opacity: 1, y: 0, rotateX: 0, rotateY: 0, scale: 1,
+      duration: 0.9, stagger: 0.12,
+      ease: 'power3.out',
     }, '-=0.4')
+  }
 })
 </script>
 
@@ -100,6 +110,7 @@ onMounted(() => {
 }
 
 .projects-grid {
+  perspective: 1000px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
@@ -108,10 +119,11 @@ onMounted(() => {
 
 .project-card {
   cursor: default;
-  transition: border-left-color 0.4s, background 0.4s;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-left-color 0.4s, background 0.4s;
 }
-
 .project-card:hover {
+  transform: translateY(-4px) rotateX(-2deg) rotateY(2deg);
   border-left-color: var(--blood-red) !important;
 }
 
@@ -146,6 +158,7 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .projects-grid {
+  perspective: 1000px;
     grid-template-columns: 1fr;
   }
   .section-inner {

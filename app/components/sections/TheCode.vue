@@ -52,21 +52,29 @@ onMounted(() => {
 
   gsap.set(headerRef.value, { opacity: 0, y: 60 })
   const rows = skillsRef.value?.querySelectorAll('.skill-row')
-  if (rows) gsap.set(rows, { opacity: 0, y: 30 })
+  if (rows) {
+    rows.forEach((row: Element, i: number) => {
+      gsap.set(row, { opacity: 0, x: 60 + i * 20, rotateY: 5 })
+    })
+  }
 
-  createTimeline({
+  const tl = createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
       start: 'top 70%',
       toggleActions: 'play none none none',
     },
   })
-    .to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-    .to(rows, {
-      opacity: 1, y: 0,
-      duration: 0.7, stagger: 0.12,
-      ease: 'power2.out',
+
+  tl.to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+
+  if (rows) {
+    tl.to(rows, {
+      opacity: 1, x: 0, rotateY: 0,
+      duration: 0.8, stagger: 0.15,
+      ease: 'power3.out',
     }, '-=0.4')
+  }
 })
 </script>
 
@@ -85,17 +93,20 @@ onMounted(() => {
 }
 
 .skills-list {
+  perspective: 800px;
   margin-top: 60px;
 }
 
 .skill-row {
   display: flex;
+  transform-style: preserve-3d;
   align-items: baseline;
   justify-content: space-between;
   padding: 28px 0;
   border-bottom: 1px solid rgba(10, 10, 15, 0.06);
   transition: padding-left 0.4s, border-color 0.4s;
 }
+
 
 .skill-row:hover {
   padding-left: 16px;
