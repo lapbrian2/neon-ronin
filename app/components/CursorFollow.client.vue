@@ -1,7 +1,7 @@
 <template>
   <div class="cursor-wrapper" :class="{ 'cursor-hidden': !visible }">
-    <div ref="dotRef" class="cursor-dot" :class="cursorClass" />
-    <div ref="ringRef" class="cursor-ring" :class="cursorClass" />
+    <div ref="dotRef" class="cursor-dot" :class="[cursorClass, sectionColor]" />
+    <div ref="ringRef" class="cursor-ring" :class="[cursorClass, sectionColor]" />
   </div>
 </template>
 
@@ -12,6 +12,7 @@ const dotRef = ref<HTMLElement | null>(null)
 const ringRef = ref<HTMLElement | null>(null)
 const visible = ref(false)
 const cursorClass = ref('')
+const sectionColor = ref('')
 
 let mouseX = 0
 let mouseY = 0
@@ -42,6 +43,33 @@ onMounted(() => {
     })
   })
 
+  // Section-aware cursor color
+  const sectionColorMap: Record<string, string> = {
+    'hero-rain': 'cursor-section-red',
+    'the-city': 'cursor-section-cyan',
+    'the-past': 'cursor-section-ink',
+    'the-code': 'cursor-section-cyan',
+    'the-night': 'cursor-section-red',
+    'dawn': 'cursor-section-amber',
+  }
+
+  const sections = document.querySelectorAll('section')
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+        const el = entry.target as HTMLElement
+        for (const [cls, color] of Object.entries(sectionColorMap)) {
+          if (el.classList.contains(cls)) {
+            sectionColor.value = color
+            break
+          }
+        }
+      }
+    })
+  }, { threshold: [0.3, 0.5] })
+
+  sections.forEach(s => observer.observe(s))
+
   // Detect interactive elements
   const onMouseOver = (e: MouseEvent) => {
     const target = e.target as HTMLElement
@@ -69,6 +97,7 @@ onMounted(() => {
   document.addEventListener('mouseup', onMouseUp)
 
   onUnmounted(() => {
+    observer.disconnect()
     document.body.style.cursor = ''
     window.removeEventListener('mousemove', onMouseMove)
     document.removeEventListener('mouseover', onMouseOver)
@@ -144,6 +173,36 @@ onMounted(() => {
   width: 28px;
   height: 28px;
   border-color: white;
+}
+
+
+/* Section-aware cursor colors */
+.cursor-section-red.cursor-ring {
+  border-color: rgba(255, 23, 68, 0.4);
+}
+.cursor-section-red.cursor-dot {
+  background: var(--neon-red);
+}
+
+.cursor-section-cyan.cursor-ring {
+  border-color: rgba(0, 229, 255, 0.4);
+}
+.cursor-section-cyan.cursor-dot {
+  background: var(--neon-cyan);
+}
+
+.cursor-section-ink.cursor-ring {
+  border-color: rgba(26, 24, 20, 0.3);
+}
+.cursor-section-ink.cursor-dot {
+  background: var(--ink-black, #1a1814);
+}
+
+.cursor-section-amber.cursor-ring {
+  border-color: rgba(255, 215, 64, 0.4);
+}
+.cursor-section-amber.cursor-dot {
+  background: var(--neon-amber);
 }
 
 @media (max-width: 768px) {

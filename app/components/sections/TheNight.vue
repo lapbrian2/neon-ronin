@@ -381,6 +381,37 @@ onMounted(() => {
   will-change: transform, opacity;
 }
 
+
+/* Manga panel hover zoom — contained by overflow:hidden on panel-inner */
+.panel-placeholder {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.panel-inner:hover .panel-placeholder {
+  transform: scale(1.05);
+}
+
+.panel-inner:hover .panel-caption span,
+.panel-inner:hover .panel-caption--bottom span {
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
+}
+
+/* Red accent glow on panel border hover */
+.panel-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.panel-inner:hover::after {
+  border-color: rgba(255, 23, 68, 0.3);
+  box-shadow: inset 0 0 30px rgba(255, 23, 68, 0.05);
+}
+
 @media (max-width: 768px) {
   .night-panels {
     grid-template-columns: 1fr;

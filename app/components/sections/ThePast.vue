@@ -158,10 +158,10 @@ onMounted(() => {
 
   gsap.set(splatRef.value, { scale: 0.5 })
 
-  // Poem lines stagger — first verse
+  // Poem lines stagger — first verse (brush-stroke clip-path reveal)
   const poemLines = poemRef.value?.querySelectorAll('.poem-line')
   if (poemLines) {
-    gsap.set(poemLines, { y: 20 })
+    gsap.set(poemLines, { clipPath: 'inset(0 100% 0 0)' })
     createTimeline({
       scrollTrigger: {
         trigger: poemRef.value,
@@ -170,9 +170,9 @@ onMounted(() => {
       },
     }).to(poemLines, {
       opacity: 1,
-      y: 0,
-      duration: 0.8,
-      stagger: 0.4,
+      clipPath: 'inset(0 0% 0 0)',
+      duration: 1.2,
+      stagger: 0.5,
       ease: 'power2.out',
     })
   }
@@ -192,10 +192,10 @@ onMounted(() => {
     ease: 'power2.inOut',
   })
 
-  // Second verse stagger
+  // Second verse stagger (brush-stroke clip-path reveal)
   const verse2Lines = verse2Ref.value?.querySelectorAll('.poem-line-2')
   if (verse2Lines) {
-    gsap.set(verse2Lines, { y: 15 })
+    gsap.set(verse2Lines, { clipPath: 'inset(0 100% 0 0)' })
     createTimeline({
       scrollTrigger: {
         trigger: verse2Ref.value,
@@ -204,9 +204,9 @@ onMounted(() => {
       },
     }).to(verse2Lines, {
       opacity: 1,
-      y: 0,
-      duration: 0.8,
-      stagger: 0.35,
+      clipPath: 'inset(0 0% 0 0)',
+      duration: 1,
+      stagger: 0.4,
       ease: 'power2.out',
     })
   }
