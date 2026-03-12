@@ -139,6 +139,69 @@ function init() {
     glows.push(glow)
   }
 
+  // === FLOATING KANJI GLYPHS ===
+  const KANJI_COUNT = isMobile ? 6 : 15
+  const kanjiChars = '雨夜刀影風道命侍鬼光闇龍'
+  const kanjiMeshes: THREE.Mesh[] = []
+  const kanjiVelocities: number[] = []
+  const kanjiDrifts: number[] = []
+
+  // Create a shared canvas to generate kanji textures
+  const kanjiCanvas = document.createElement('canvas')
+  kanjiCanvas.width = 64
+  kanjiCanvas.height = 64
+  const kCtx = kanjiCanvas.getContext('2d')!
+
+  for (let i = 0; i < KANJI_COUNT; i++) {
+    const char = kanjiChars[Math.floor(Math.random() * kanjiChars.length)]
+
+    // Draw kanji to canvas
+    kCtx.clearRect(0, 0, 64, 64)
+    kCtx.fillStyle = 'white'
+    kCtx.font = '48px serif'
+    kCtx.textAlign = 'center'
+    kCtx.textBaseline = 'middle'
+    kCtx.fillText(char, 32, 32)
+
+    const tex = new THREE.CanvasTexture(kanjiCanvas)
+    tex.needsUpdate = true
+
+    // Clone the image data so each mesh gets its own texture
+    const cloneCanvas = document.createElement('canvas')
+    cloneCanvas.width = 64
+    cloneCanvas.height = 64
+    const cloneCtx = cloneCanvas.getContext('2d')!
+    cloneCtx.drawImage(kanjiCanvas, 0, 0)
+    const cloneTex = new THREE.CanvasTexture(cloneCanvas)
+
+    const kanjiMat = new THREE.MeshBasicMaterial({
+      map: cloneTex,
+      transparent: true,
+      opacity: 0.04 + Math.random() * 0.06,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    })
+
+    const size = 0.8 + Math.random() * 1.5
+    const kanjiMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(size, size),
+      kanjiMat
+    )
+
+    kanjiMesh.position.set(
+      (Math.random() - 0.5) * RAIN_AREA * 0.8,
+      Math.random() * RAIN_HEIGHT - 2,
+      (Math.random() - 0.5) * 15 - 3
+    )
+    kanjiMesh.rotation.z = (Math.random() - 0.5) * 0.3
+
+    scene.add(kanjiMesh)
+    kanjiMeshes.push(kanjiMesh)
+    kanjiVelocities.push(0.003 + Math.random() * 0.008)
+    kanjiDrifts.push(Math.random() * Math.PI * 2)
+  }
+
   // === GROUND REFLECTION PLANE ===
   const groundGeo = new THREE.PlaneGeometry(40, 40)
   const groundMat = new THREE.MeshBasicMaterial({
@@ -265,6 +328,25 @@ function init() {
       g.position.y += Math.sin(time * 0.5 + i) * 0.002
       const mat = g.material as THREE.MeshBasicMaterial
       mat.opacity = 0.015 + Math.sin(time * 0.8 + i * 2) * 0.008
+    })
+
+    // === Floating kanji ===
+    kanjiMeshes.forEach((k, i) => {
+      // Slow upward drift
+      k.position.y -= kanjiVelocities[i]
+      // Gentle horizontal sway
+      k.position.x += Math.sin(time * 0.4 + kanjiDrifts[i]) * 0.003
+      // Slow rotation
+      k.rotation.z += 0.0005
+      // Pulse opacity
+      const mat = k.material as THREE.MeshBasicMaterial
+      mat.opacity = (0.04 + Math.sin(time * 0.6 + i * 1.5) * 0.03) * (1 + lightningFlash * 3)
+
+      // Reset when fallen below
+      if (k.position.y < -4) {
+        k.position.y = RAIN_HEIGHT + Math.random() * 3
+        k.position.x = (Math.random() - 0.5) * RAIN_AREA * 0.8
+      }
     })
 
     renderer.render(scene, camera)

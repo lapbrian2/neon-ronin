@@ -5,9 +5,24 @@
       <PreloaderClient />
     </ClientOnly>
 
+    <!-- Film grain overlay -->
+    <ClientOnly>
+      <FilmGrainClient />
+    </ClientOnly>
+
     <!-- Custom cursor -->
     <ClientOnly>
       <CursorFollowClient />
+    </ClientOnly>
+
+    <!-- Chapter navigation dots -->
+    <ClientOnly>
+      <ChapterNavClient />
+    </ClientOnly>
+
+    <!-- Audio toggle -->
+    <ClientOnly>
+      <AudioToggleClient />
     </ClientOnly>
 
     <main class="neon-ronin">

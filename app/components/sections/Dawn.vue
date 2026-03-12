@@ -18,6 +18,11 @@
     <!-- Horizon line -->
     <div ref="horizonRef" class="dawn-horizon" />
 
+    <!-- God rays -->
+    <div class="dawn-rays">
+      <div v-for="i in 5" :key="i" class="dawn-ray" :style="{ left: `${15 + i * 15}%`, animationDelay: `${i * 0.8}s`, opacity: 0.02 + (i % 3) * 0.01 }" />
+    </div>
+
     <div class="dawn-content">
       <!-- Chapter marker -->
       <span ref="chapterRef" class="font-body uppercase tracking-[0.3em] text-sm text-ash opacity-0">
@@ -262,6 +267,42 @@ onMounted(() => {
   background: linear-gradient(to right, transparent, rgba(255, 215, 64, 0.15), rgba(255, 180, 50, 0.1), transparent);
   transform-origin: center;
   z-index: 1;
+}
+
+/* God rays */
+.dawn-rays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.dawn-ray {
+  position: absolute;
+  top: -20%;
+  width: 2px;
+  height: 140%;
+  background: linear-gradient(to bottom, rgba(255, 215, 64, 0.08), rgba(255, 180, 50, 0.02), transparent);
+  transform: rotate(5deg);
+  animation: ray-sway 8s ease-in-out infinite alternate;
+  filter: blur(8px);
+}
+
+.dawn-ray:nth-child(2n) {
+  transform: rotate(-3deg);
+  width: 3px;
+  filter: blur(12px);
+}
+
+.dawn-ray:nth-child(3n) {
+  transform: rotate(8deg);
+  filter: blur(6px);
+}
+
+@keyframes ray-sway {
+  0% { transform: rotate(3deg) translateX(0); }
+  100% { transform: rotate(-3deg) translateX(20px); }
 }
 
 .dawn-content {

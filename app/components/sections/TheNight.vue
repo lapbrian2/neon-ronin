@@ -6,8 +6,14 @@
     </div>
 
     <!-- Ember/spark particles (client-only canvas) -->
+
     <ClientOnly>
       <ThreeEmberCanvas />
+    </ClientOnly>
+
+    <!-- Sword slash trail (scroll-driven canvas) -->
+    <ClientOnly>
+      <ThreeSlashTrailClient />
     </ClientOnly>
 
     <div class="night-content">
