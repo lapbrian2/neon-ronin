@@ -338,7 +338,12 @@ onMounted(() => {
   100% { transform: translateY(120vh); opacity: 0; }
 }
 
-/* Puddle reflection */
+/* Puddle reflection with shimmer */
+@keyframes puddle-shimmer {
+  0%, 100% { opacity: 0.03; transform: scaleY(1); }
+  50% { opacity: 0.06; transform: scaleY(1.1); }
+}
+
 .panel-puddle {
   position: absolute;
   bottom: 0;
@@ -348,6 +353,8 @@ onMounted(() => {
   background: linear-gradient(to top, rgba(0, 229, 255, 0.03), transparent);
   z-index: 3;
   pointer-events: none;
+  animation: puddle-shimmer 4s ease-in-out infinite;
+  transform-origin: bottom;
 }
 
 /* Silhouette placeholder */
@@ -401,6 +408,16 @@ onMounted(() => {
   transform: scaleX(0);
   transform-origin: left;
   border-radius: 1px;
+}
+
+/* Panel hover glow */
+.city-panel:hover .panel-image-placeholder {
+  border-color: rgba(255, 23, 68, 0.2);
+  box-shadow: inset 0 0 40px rgba(255, 23, 68, 0.03);
+}
+
+.panel-image-placeholder {
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
 /* Mobile: stack vertically */

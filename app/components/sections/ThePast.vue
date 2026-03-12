@@ -1,5 +1,8 @@
 <template>
   <section ref="sectionRef" class="the-past section section--fullscreen ink-wash">
+    <!-- Aged paper overlay that intensifies on scroll -->
+    <div ref="agedOverlay" class="aged-paper-overlay" />
+
     <!-- Paper texture with grain -->
     <div class="ink-texture" />
     <div class="paper-grain" />
@@ -84,11 +87,25 @@ const verse2Ref = ref<HTMLElement | null>(null)
 const imageRef = ref<HTMLElement | null>(null)
 const splatRef = ref<HTMLElement | null>(null)
 const inkDivider = ref<HTMLElement | null>(null)
+const agedOverlay = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
 onMounted(() => {
   if (!sectionRef.value) return
+
+  // Aged paper darkens as you scroll deeper
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top 50%',
+      end: 'bottom 50%',
+      scrub: 1,
+    },
+  }).fromTo(agedOverlay.value,
+    { opacity: 0 },
+    { opacity: 0.3, ease: 'none' }
+  )
 
   // Chapter + title reveal
   createTimeline({
@@ -210,6 +227,21 @@ onMounted(() => {
   justify-content: center;
   overflow: hidden;
   padding: 6rem 2rem;
+}
+
+.aged-paper-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 30%,
+    rgba(139, 100, 50, 0.08) 0%,
+    rgba(100, 70, 30, 0.05) 40%,
+    rgba(60, 40, 20, 0.03) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
 }
 
 .ink-texture {

@@ -11,6 +11,9 @@
     <!-- Vignette overlay -->
     <div class="hero-vignette" />
 
+    <!-- Ambient atmospheric glow -->
+    <div ref="ambientGlow" class="hero-ambient-glow" />
+
     <!-- Content overlay -->
     <div class="hero-content">
       <!-- Chapter marker -->
@@ -60,6 +63,7 @@ const titleRef = ref<HTMLElement | null>(null)
 const subtitleRef = ref<HTMLElement | null>(null)
 const scrollRef = ref<HTMLElement | null>(null)
 const decoLineRef = ref<HTMLElement | null>(null)
+const ambientGlow = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
@@ -70,6 +74,19 @@ onMounted(() => {
   gsap.set(titleRef.value, { y: 60, skewY: 3 })
   gsap.set(subtitleRef.value, { y: 20 })
   gsap.set(decoLineRef.value, { scaleX: 0 })
+
+  // Ambient glow shifts on scroll — subtle color temperature change
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1,
+    },
+  }).fromTo(ambientGlow.value, 
+    { opacity: 0 },
+    { opacity: 0.4, ease: 'none' }
+  )
 
   // Entrance timeline — cinematic reveal
   const entrance = createTimeline({
@@ -244,6 +261,21 @@ onMounted(() => {
   50% { transform: translate(-3px, -1px); }
   75% { transform: translate(2px, -2px); }
   100% { transform: translate(3px, 2px); }
+}
+
+/* Ambient atmospheric glow */
+.hero-ambient-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(255, 23, 68, 0.08) 0%,
+    rgba(170, 0, 255, 0.04) 30%,
+    transparent 60%
+  );
+  opacity: 0;
 }
 
 /* Decorative line */

@@ -2,27 +2,32 @@
   <div>
     <!-- Preloader -->
     <ClientOnly>
-      <PreloaderClient />
+      <Preloader />
     </ClientOnly>
 
     <!-- Film grain overlay -->
     <ClientOnly>
-      <FilmGrainClient />
+      <FilmGrain />
     </ClientOnly>
 
     <!-- Custom cursor -->
     <ClientOnly>
-      <CursorFollowClient />
+      <CursorFollow />
     </ClientOnly>
 
     <!-- Chapter navigation dots -->
     <ClientOnly>
-      <ChapterNavClient />
+      <ChapterNav />
     </ClientOnly>
 
     <!-- Audio toggle -->
     <ClientOnly>
-      <AudioToggleClient />
+      <AudioToggle />
+    </ClientOnly>
+
+    <!-- Scroll progress bar -->
+    <ClientOnly>
+      <ScrollProgress />
     </ClientOnly>
 
     <main class="neon-ronin">

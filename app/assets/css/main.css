@@ -197,3 +197,84 @@ html.lenis, html.lenis body {
 
 .letterbox::before { top: 0; }
 .letterbox::after { bottom: 0; }
+
+
+/* ============================================
+   Section Edge Transitions
+   ============================================ */
+
+/* Gradient bleed between sections */
+.section::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 20vh;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Hero → City: dark fade */
+.hero-rain::after {
+  background: linear-gradient(to bottom, transparent 0%, var(--night) 100%);
+}
+
+/* City → Past: dark to parchment */
+.the-city::after {
+  background: linear-gradient(to bottom, transparent 0%, var(--ink-paper) 100%);
+  height: 15vh;
+}
+
+/* Past → Code: parchment to void */
+.the-past::after {
+  background: linear-gradient(to bottom, transparent 0%, var(--void) 100%);
+}
+
+/* Code → Night: void stays dark */
+.the-code::after {
+  background: linear-gradient(to bottom, transparent 0%, #1a0a2a 100%);
+  height: 10vh;
+}
+
+/* Night → Dawn: purple to void */
+.the-night::after {
+  background: linear-gradient(to bottom, transparent 0%, var(--void) 100%);
+}
+
+/* ============================================
+   Breathing Pulse (ambient micro-animation)
+   ============================================ */
+
+@keyframes ambient-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes ambient-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ============================================
+   Cursor Magnet (hover pull effect)
+   ============================================ */
+
+[data-cursor] {
+  cursor: none;
+}
+
+/* ============================================
+   Text Reveal Utilities
+   ============================================ */
+
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

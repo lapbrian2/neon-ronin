@@ -1,5 +1,8 @@
 <template>
   <section ref="sectionRef" class="the-night section">
+    <!-- Red action vignette -->
+    <div ref="redVignette" class="night-vignette" />
+
     <!-- Speed lines background -->
     <div ref="speedLines" class="speed-lines-container">
       <div v-for="i in 16" :key="i" class="speed-line-ray" :style="{ transform: `rotate(${i * 22.5}deg)` }" />
@@ -13,7 +16,7 @@
 
     <!-- Sword slash trail (scroll-driven canvas) -->
     <ClientOnly>
-      <ThreeSlashTrailClient />
+      <ThreeSlashTrail />
     </ClientOnly>
 
     <div class="night-content">
@@ -86,11 +89,25 @@ const subtextRef = ref<HTMLElement | null>(null)
 const panelsRef = ref<HTMLElement | null>(null)
 const speedLines = ref<HTMLElement | null>(null)
 const impactRef = ref<HTMLElement | null>(null)
+const redVignette = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
 onMounted(() => {
   if (!sectionRef.value) return
+
+  // Red vignette builds intensity through section
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top 60%',
+      end: 'bottom 40%',
+      scrub: 1,
+    },
+  }).fromTo(redVignette.value,
+    { opacity: 0 },
+    { opacity: 1, ease: 'power2.in' }
+  )
 
   // Speed lines pulse on scroll
   createTimeline({
@@ -218,6 +235,21 @@ onMounted(() => {
   justify-content: center;
   overflow: hidden;
   padding: 6rem 2rem;
+}
+
+.night-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    rgba(255, 23, 68, 0.06) 60%,
+    rgba(255, 23, 68, 0.12) 80%,
+    rgba(255, 23, 68, 0.08) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
 }
 
 .speed-lines-container {

@@ -1,5 +1,8 @@
 <template>
   <section ref="sectionRef" class="dawn section section--fullscreen">
+    <!-- Background color transition — void to warm navy -->
+    <div ref="warmBg" class="dawn-warm-bg" />
+
     <!-- Warm gradient overlay that builds on scroll -->
     <div ref="warmGlow" class="dawn-glow" />
 
@@ -88,6 +91,7 @@ const titleRef = ref<HTMLElement | null>(null)
 const imageRef = ref<HTMLElement | null>(null)
 const closingRef = ref<HTMLElement | null>(null)
 const creditsRef = ref<HTMLElement | null>(null)
+const warmBg = ref<HTMLElement | null>(null)
 const warmGlow = ref<HTMLElement | null>(null)
 const horizonRef = ref<HTMLElement | null>(null)
 const separatorRef = ref<HTMLElement | null>(null)
@@ -101,6 +105,19 @@ function scrollToTop() {
 
 onMounted(() => {
   if (!sectionRef.value) return
+
+  // Background warms from cold void to navy/warm tint
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top 90%',
+      end: 'center center',
+      scrub: 1,
+    },
+  }).to(warmBg.value, {
+    opacity: 1,
+    duration: 1,
+  })
 
   // Warm glow builds on scroll — transition from dark to warm
   createTimeline({
@@ -216,6 +233,20 @@ onMounted(() => {
   justify-content: center;
   padding: 6rem 2rem;
   overflow: hidden;
+}
+
+.dawn-warm-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(30, 20, 40, 0.8) 0%,
+    rgba(40, 25, 20, 0.6) 40%,
+    rgba(50, 30, 15, 0.4) 70%,
+    rgba(60, 35, 10, 0.3) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
 }
 
 .dawn-glow {

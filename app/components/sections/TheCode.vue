@@ -1,5 +1,10 @@
 <template>
   <section ref="sectionRef" class="the-code section">
+    <!-- Matrix rain background -->
+    <ClientOnly>
+      <ThreeMatrixRain />
+    </ClientOnly>
+
     <!-- Impact flash overlay -->
     <div ref="flashRef" class="code-flash" />
 
