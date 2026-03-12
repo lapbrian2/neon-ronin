@@ -1,5 +1,5 @@
 <template>
-  <section ref="sectionRef" class="hero-rain section section--fullscreen letterbox">
+  <section ref="sectionRef" class="hero-rain section section--fullscreen">
     <!-- Three.js rain canvas (client-only) -->
     <ClientOnly>
       <ThreeRainCanvas />
@@ -51,6 +51,10 @@
       </div>
     </div>
 
+    <!-- Animated letterbox bars -->
+    <div ref="letterboxTop" class="letterbox-bar letterbox-bar--top" />
+    <div ref="letterboxBottom" class="letterbox-bar letterbox-bar--bottom" />
+
     <!-- Rain overlay gradient -->
     <div class="hero-gradient" />
   </section>
@@ -64,6 +68,8 @@ const subtitleRef = ref<HTMLElement | null>(null)
 const scrollRef = ref<HTMLElement | null>(null)
 const decoLineRef = ref<HTMLElement | null>(null)
 const ambientGlow = ref<HTMLElement | null>(null)
+const letterboxTop = ref<HTMLElement | null>(null)
+const letterboxBottom = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
@@ -177,6 +183,20 @@ onMounted(() => {
     y: -250,
     opacity: 0,
     ease: 'none',
+  })
+
+  // Letterbox bars shrink on scroll — cinematic opening
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top top',
+      end: '60% top',
+      scrub: 1,
+    },
+  }).to([letterboxTop.value, letterboxBottom.value], {
+    height: 0,
+    duration: 1,
+    ease: 'power2.inOut',
   })
 
   // Scroll-driven fade out + parallax
@@ -385,14 +405,25 @@ onMounted(() => {
 }
 
 /* Mobile */
+
+/* Animated letterbox bars */
+.letterbox-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8vh;
+  background: black;
+  z-index: 10;
+  pointer-events: none;
+  will-change: height;
+}
+
+.letterbox-bar--top { top: 0; }
+.letterbox-bar--bottom { bottom: 0; }
+
 @media (max-width: 768px) {
   .hero-title {
     font-size: clamp(3rem, 15vw, 5rem);
-  }
-
-  .letterbox::before,
-  .letterbox::after {
-    height: 4vh;
   }
 
   .hero-scanlines {

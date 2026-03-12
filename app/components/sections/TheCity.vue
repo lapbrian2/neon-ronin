@@ -2,6 +2,9 @@
   <section ref="sectionRef" class="the-city section">
     <!-- Pin wrapper for horizontal scroll -->
     <div ref="pinRef" class="city-pin">
+      <!-- Ambient neon pulse -->
+      <div class="city-neon-pulse" />
+
       <!-- Atmospheric fog layers -->
       <div class="city-fog city-fog--top" />
       <div class="city-fog city-fog--bottom" />
@@ -461,6 +464,46 @@ onMounted(() => {
 
 .panel-image-placeholder {
   transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+
+/* Ambient neon pulse — city breathing with light */
+.city-neon-pulse {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 30% 60%,
+    rgba(170, 0, 255, 0.04) 0%,
+    transparent 40%
+  ),
+  radial-gradient(
+    ellipse at 70% 40%,
+    rgba(255, 23, 68, 0.03) 0%,
+    transparent 35%
+  ),
+  radial-gradient(
+    ellipse at 50% 80%,
+    rgba(0, 229, 255, 0.03) 0%,
+    transparent 30%
+  );
+  animation: city-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes city-pulse {
+  0% {
+    opacity: 0.5;
+    filter: blur(40px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(50px);
+  }
+  100% {
+    opacity: 0.6;
+    filter: blur(45px);
+  }
 }
 
 /* Mobile: stack vertically */
