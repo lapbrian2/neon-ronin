@@ -1,5 +1,5 @@
 <template>
-  <div class="neon-ronin-app">
+  <div class="ronin-app">
     <!-- Paper grain overlay -->
     <div class="grain-overlay" />
 
@@ -31,7 +31,7 @@
     <nav class="site-nav" :class="{ scrolled: isScrolled }">
       <div class="nav-left">
         <span class="nav-kanji">浪人</span>
-        <span class="nav-title">NEON RONIN</span>
+        
       </div>
       <div class="nav-right">
         <a v-for="link in navLinks" :key="link.id" :href="'#' + link.id" class="nav-link">
@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'NEON RONIN — A Scroll-Driven Experience',
+  title: '浪人 — A Scroll-Driven Experience',
 })
 
 const isScrolled = ref(false)
@@ -84,7 +84,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.neon-ronin-app {
+.ronin-app {
   position: relative;
   width: 100%;
   min-height: 100vh;

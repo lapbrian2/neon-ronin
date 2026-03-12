@@ -18,7 +18,7 @@
           some destinations demand more than one blade.
         </p>
 
-        <a href="mailto:hello@neonronin.art" class="road-cta" data-cursor>
+        <a href="mailto:hello@ronin.art" class="road-cta" data-cursor>
           <span class="cta-bg" />
           Walk together
           <span class="cta-arrow">→</span>
@@ -30,7 +30,7 @@
     <footer ref="footerRef" class="site-footer">
       <div class="footer-left">
         <div class="footer-kanji">浪人</div>
-        <p class="footer-copy">NEON RONIN — 2026</p>
+        <p class="footer-copy">浪人 — 2026</p>
       </div>
       <p class="footer-quote">
         "The masterless blade walks on<br />

@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   app: {
     head: {
-      title: 'NEON RONIN — A Scroll-Driven Experience',
+      title: '浪人 — A Scroll-Driven Experience',
       htmlAttrs: { lang: 'en' },
       meta: [
         { charset: 'utf-8' },

@@ -7,7 +7,7 @@
       <div class="preloader-content">
         <!-- Glitch title -->
         <div class="preloader-title">
-          <span class="preloader-text font-display tracking-display" data-text="NEON RONIN">NEON RONIN</span>
+          <span class="preloader-text font-display tracking-display" data-text="浪人">浪人</span>
         </div>
 
         <!-- Numeric counter -->

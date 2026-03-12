@@ -16,10 +16,7 @@
       <div ref="entranceRef" class="hero-entrance">
         <div class="hero-chapter">CHAPTER I — THE ARRIVAL</div>
 
-        <h1 class="hero-title">
-          NEON<br />
-          <em>RONIN</em>
-        </h1>
+        <h1 class="hero-title">浪人</h1>
 
         <div class="hero-subtitle-row">
           <div class="hero-line" />
@@ -172,8 +169,9 @@ onMounted(() => {
   color: var(--ink);
 }
 
-.hero-title em {
-  font-weight: 700;
+.hero-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 900;
 }
 
 .hero-subtitle-row {
