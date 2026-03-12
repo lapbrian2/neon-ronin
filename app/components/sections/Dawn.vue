@@ -51,9 +51,13 @@ const { createTimeline, gsap } = useScrollAnimation()
 onMounted(() => {
   if (!sectionRef.value) return
 
-  gsap.set(headerRef.value, { opacity: 0, y: 60 })
-  gsap.set(bodyRef.value, { opacity: 0, y: 30 })
-  gsap.set(footerRef.value, { opacity: 0 })
+  gsap.set(headerRef.value, { opacity: 0, y: 60, scale: 0.97 })
+  gsap.set(bodyRef.value, { opacity: 0, x: -50 })
+
+  const footerLeft = footerRef.value?.querySelector('.footer-left')
+  const footerQuote = footerRef.value?.querySelector('.footer-quote')
+  if (footerLeft) gsap.set(footerLeft, { opacity: 0, y: 20 })
+  if (footerQuote) gsap.set(footerQuote, { opacity: 0, x: 30 })
 
   createTimeline({
     scrollTrigger: {
@@ -62,9 +66,18 @@ onMounted(() => {
       toggleActions: 'play none none none',
     },
   })
-    .to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-    .to(bodyRef.value, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.4')
-    .to(footerRef.value, { opacity: 1, duration: 1, ease: 'power2.out' }, '-=0.2')
+    .to(headerRef.value, { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out' })
+    .to(bodyRef.value, { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out' }, '-=0.6')
+
+  createTimeline({
+    scrollTrigger: {
+      trigger: footerRef.value,
+      start: 'top 85%',
+      toggleActions: 'play none none none',
+    },
+  })
+    .to(footerLeft, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
+    .to(footerQuote, { opacity: 1, x: 0, duration: 0.8, ease: 'power2.out' }, '-=0.4')
 })
 </script>
 
@@ -121,6 +134,11 @@ onMounted(() => {
   transform: translateX(0);
 }
 
+.road-cta:hover .cta-arrow { animation: arrowSlide 0.6s ease infinite; }
+@keyframes arrowSlide {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
 .cta-arrow {
   font-size: 14px;
 }
