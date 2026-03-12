@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   tailwindcss: {
-    cssPath: false,
+    configPath: '~/tailwind.config.ts',
   },
 
   // SSR with client-only Three.js components
