@@ -39,7 +39,7 @@
       <!-- Image placeholder — the morning scene -->
       <div ref="imageRef" class="dawn-image mt-12 opacity-0">
         <div class="dawn-image-placeholder">
-          <span class="text-smoke text-sm font-body">[ artwork: dawn — the ronin walks into morning light ]</span>
+          <div class="dawn-atmosphere" />
         </div>
         <!-- Light leak overlay on image -->
         <div class="dawn-light-leak" />
@@ -48,8 +48,7 @@
       <!-- Closing text -->
       <div ref="closingRef" class="dawn-closing mt-12 opacity-0">
         <p class="font-serif text-[1.25rem] text-light leading-relaxed max-w-[45ch] mx-auto">
-          The city exhales. Steam curls from a bowl set on a counter.
-          The sword rests. For now.
+          The sword rests.
         </p>
       </div>
 
@@ -371,12 +370,34 @@ onMounted(() => {
 
 .dawn-image-placeholder {
   aspect-ratio: 16/9;
-  border: 1px dashed var(--smoke);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  overflow: hidden;
   border-radius: 4px;
-  background: rgba(26, 27, 58, 0.2);
+  background: linear-gradient(135deg,
+    rgba(60, 35, 10, 0.15) 0%,
+    rgba(255, 180, 50, 0.06) 30%,
+    rgba(40, 25, 20, 0.12) 60%,
+    rgba(60, 35, 10, 0.08) 100%
+  );
+  box-shadow:
+    inset 0 0 80px rgba(255, 215, 64, 0.04),
+    0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dawn-atmosphere {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(255, 215, 64, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 70%, rgba(255, 140, 40, 0.06) 0%, transparent 40%),
+    linear-gradient(to right, rgba(255, 215, 64, 0.02), transparent 30%, transparent 70%, rgba(255, 180, 50, 0.03));
+  pointer-events: none;
+  animation: dawn-atmo-pulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes dawn-atmo-pulse {
+  0% { opacity: 0.7; }
+  100% { opacity: 1; }
 }
 
 /* Light leak on image */

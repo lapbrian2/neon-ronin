@@ -29,9 +29,9 @@
   --ink-red: #8B2500;
 
   /* Glow effects */
-  --glow-red: 0 0 20px rgba(255, 23, 68, 0.6), 0 0 60px rgba(255, 23, 68, 0.2);
-  --glow-cyan: 0 0 20px rgba(0, 229, 255, 0.6), 0 0 60px rgba(0, 229, 255, 0.2);
-  --glow-amber: 0 0 20px rgba(255, 215, 64, 0.6), 0 0 60px rgba(255, 215, 64, 0.2);
+  --glow-red: 0 0 20px rgba(255, 23, 68, 0.7), 0 0 60px rgba(255, 23, 68, 0.35), 0 0 120px rgba(255, 23, 68, 0.1);
+  --glow-cyan: 0 0 20px rgba(0, 229, 255, 0.7), 0 0 60px rgba(0, 229, 255, 0.35), 0 0 120px rgba(0, 229, 255, 0.1);
+  --glow-amber: 0 0 20px rgba(255, 215, 64, 0.7), 0 0 60px rgba(255, 215, 64, 0.35), 0 0 120px rgba(255, 215, 64, 0.1);
 
   /* Typography */
   --text-hero: clamp(4rem, 10vw, 10rem);

@@ -20,7 +20,7 @@
               THE CITY
             </h2>
             <p class="font-body text-ash mt-4 max-w-[35ch]">
-              Neon veins pulse through concrete bones. Every corner hums a different frequency.
+              Every light hides a lie. Every shadow keeps a secret.
             </p>
           </div>
           <div class="panel-gradient-right" />
@@ -32,22 +32,23 @@
           <div class="panel-overlay">
             <!-- Neon signs with glow effect -->
             <div class="neon-sign neon-flicker">
-              <span class="font-display text-[3rem] neon-red tracking-display neon-sign-glow neon-sign-glow--red">BAR</span>
+              <span class="font-display text-[5rem] neon-red tracking-display neon-sign-glow neon-sign-glow--red">BAR</span>
             </div>
             <div class="neon-sign-2">
-              <span class="font-display text-[2rem] neon-cyan tracking-display neon-sign-glow neon-sign-glow--cyan">RAMEN</span>
+              <span class="font-display text-[3.5rem] neon-cyan tracking-display neon-sign-glow neon-sign-glow--cyan">RAMEN</span>
             </div>
             <div class="neon-sign-3 neon-flicker-slow">
-              <span class="font-display text-[1.5rem] neon-amber tracking-display neon-sign-glow neon-sign-glow--amber">24H</span>
+              <span class="font-display text-[2.5rem] neon-amber tracking-display neon-sign-glow neon-sign-glow--amber">24H</span>
             </div>
             <!-- Rain streaks on panel -->
             <div class="panel-rain-streaks">
               <div v-for="i in 8" :key="i" class="rain-streak" :style="{ left: `${10 + i * 10}%`, animationDelay: `${i * 0.3}s`, height: `${20 + Math.random() * 30}%` }" />
             </div>
           </div>
-          <!-- Placeholder for Brian's artwork -->
-          <div class="panel-image-placeholder">
-            <span class="text-smoke text-sm font-body">[ artwork: neon alley ]</span>
+          <!-- Atmospheric neon wash -->
+          <div class="alley-neon-wash" />
+          <div class="alley-light-bars">
+            <div v-for="i in 5" :key="'lb-'+i" class="light-bar" :style="{ left: `${15 + i * 16}%`, opacity: 0.03 + (i % 3) * 0.02, animationDelay: `${i * 1.2}s` }" />
           </div>
         </div>
 
@@ -56,15 +57,13 @@
           <div class="panel-depth-layer panel-depth--far panel-depth--blue" />
           <div class="panel-overlay">
             <p class="font-serif text-[1.5rem] text-light italic leading-relaxed max-w-[30ch]">
-              Nobody walks alone here.<br />
-              The city follows you.
+              The city watches.<br />
+              It never blinks.
             </p>
           </div>
           <!-- Puddle reflection effect -->
           <div class="panel-puddle" />
-          <div class="panel-image-placeholder">
-            <span class="text-smoke text-sm font-body">[ artwork: street scene ]</span>
-          </div>
+          <div class="street-atmosphere" />
         </div>
 
         <!-- Panel 4: The figure -->
@@ -76,9 +75,7 @@
               He walks like someone who used to matter.
             </p>
           </div>
-          <div class="panel-image-placeholder">
-            <span class="text-smoke text-sm font-body">[ artwork: ronin silhouette ]</span>
-          </div>
+          <div class="figure-backlight" />
           <div class="panel-gradient-left" />
         </div>
       </div>
@@ -278,7 +275,7 @@ onMounted(() => {
 }
 
 .panel-alley {
-  background: linear-gradient(180deg, #0a0a1a 0%, #1a0a2a 100%);
+  background: linear-gradient(180deg, #0a0a1a 0%, #1a0825 50%, #250a30 100%);
 }
 
 .panel-street {
@@ -308,17 +305,7 @@ onMounted(() => {
   text-align: center;
 }
 
-.panel-image-placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  border: 1px dashed var(--smoke);
-  margin: 2rem;
-  border-radius: 4px;
-}
+
 
 /* Neon signs with glow */
 .neon-sign {
@@ -344,15 +331,15 @@ onMounted(() => {
 }
 
 .neon-sign-glow--red {
-  text-shadow: 0 0 10px var(--neon-red), 0 0 30px var(--neon-red), 0 0 60px var(--neon-red);
+  text-shadow: 0 0 10px var(--neon-red), 0 0 40px var(--neon-red), 0 0 80px var(--neon-red), 0 0 120px rgba(255, 23, 68, 0.3);
 }
 
 .neon-sign-glow--cyan {
-  text-shadow: 0 0 10px var(--neon-cyan), 0 0 30px var(--neon-cyan), 0 0 60px var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan), 0 0 40px var(--neon-cyan), 0 0 80px var(--neon-cyan), 0 0 120px rgba(0, 229, 255, 0.3);
 }
 
 .neon-sign-glow--amber {
-  text-shadow: 0 0 10px var(--neon-amber), 0 0 30px var(--neon-amber), 0 0 60px var(--neon-amber);
+  text-shadow: 0 0 10px var(--neon-amber), 0 0 40px var(--neon-amber), 0 0 80px var(--neon-amber), 0 0 120px rgba(255, 215, 64, 0.3);
 }
 
 /* Neon flicker variant (slow) */
@@ -456,14 +443,72 @@ onMounted(() => {
   border-radius: 1px;
 }
 
-/* Panel hover glow */
-.city-panel:hover .panel-image-placeholder {
-  border-color: rgba(255, 23, 68, 0.2);
-  box-shadow: inset 0 0 40px rgba(255, 23, 68, 0.03);
+/* Alley neon wash — vertical color bleeds suggesting city lights */
+.alley-neon-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(90deg, transparent 18%, rgba(170, 0, 255, 0.06) 22%, transparent 28%),
+    linear-gradient(90deg, transparent 50%, rgba(255, 23, 68, 0.05) 55%, transparent 62%),
+    linear-gradient(90deg, transparent 72%, rgba(0, 229, 255, 0.04) 78%, transparent 84%);
+  pointer-events: none;
 }
 
-.panel-image-placeholder {
-  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+/* Vertical light bars from windows/signs */
+.alley-light-bars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.light-bar {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom,
+    transparent 10%,
+    rgba(170, 0, 255, 0.08) 30%,
+    rgba(255, 23, 68, 0.06) 50%,
+    rgba(0, 229, 255, 0.04) 70%,
+    transparent 90%
+  );
+  filter: blur(8px);
+  animation: light-bar-flicker 6s ease-in-out infinite alternate;
+}
+
+@keyframes light-bar-flicker {
+  0%, 100% { opacity: 0.5; }
+  30% { opacity: 0.8; }
+  60% { opacity: 0.3; }
+}
+
+/* Street wet-ground atmosphere */
+.street-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(0, 229, 255, 0.04) 0%, transparent 30%),
+    linear-gradient(to bottom, transparent 60%, rgba(0, 20, 40, 0.3) 100%);
+}
+
+/* Figure backlight glow */
+.figure-backlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    rgba(255, 23, 68, 0.06) 0%,
+    rgba(170, 0, 255, 0.03) 30%,
+    transparent 60%
+  );
 }
 
 

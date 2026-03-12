@@ -56,7 +56,7 @@
 
         <div ref="line5" class="code-line opacity-0 mt-8">
           <p class="font-serif text-[1.25rem] text-ash italic max-w-[40ch] mx-auto">
-            A ronin does not seek purpose. He walks until purpose finds him.<span class="cursor-blink">_</span>
+            Purpose is a debt. The ronin pays in miles.<span class="cursor-blink">_</span>
           </p>
         </div>
       </div>

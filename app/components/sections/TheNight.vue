@@ -30,7 +30,7 @@
       </h2>
 
       <p ref="subtextRef" class="font-body text-ash mt-4 max-w-[40ch] mx-auto opacity-0">
-        Every scar was earned running toward something, not away.
+        Some debts are only settled in blood.
       </p>
 
       <!-- Action panels — manga-style grid -->
@@ -38,7 +38,7 @@
         <div class="night-panel panel-1 opacity-0">
           <div class="panel-inner">
             <div class="panel-placeholder">
-              <span class="text-smoke text-sm font-body">[ artwork: the confrontation ]</span>
+              <div class="panel-atmosphere panel-atmo--red" />
             </div>
             <div class="panel-caption">
               <span class="font-display text-[1.5rem] text-light uppercase tracking-display panel-text-glow">DRAW</span>
@@ -51,7 +51,7 @@
         <div class="night-panel panel-2 opacity-0">
           <div class="panel-inner">
             <div class="panel-placeholder">
-              <span class="text-smoke text-sm font-body">[ artwork: the strike ]</span>
+              <div class="panel-atmosphere panel-atmo--slash" />
             </div>
             <!-- Slash effect across panel -->
             <div class="panel-slash" />
@@ -62,7 +62,7 @@
         <div class="night-panel panel-3 opacity-0">
           <div class="panel-inner">
             <div class="panel-placeholder">
-              <span class="text-smoke text-sm font-body">[ artwork: aftermath ]</span>
+              <div class="panel-atmosphere panel-atmo--mist" />
             </div>
             <div class="panel-caption panel-caption--bottom">
               <span class="font-body text-ash text-sm italic">One breath. One cut. Done.</span>
@@ -248,7 +248,7 @@ onMounted(() => {
 .the-night {
   position: relative;
   min-height: 100vh;
-  background: radial-gradient(ellipse at center, #1a0a2a 0%, var(--void) 70%);
+  background: radial-gradient(ellipse at center, #1a0a2a 0%, #120520 40%, var(--void) 80%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -261,10 +261,10 @@ onMounted(() => {
   inset: 0;
   background: radial-gradient(
     ellipse at center,
-    transparent 30%,
-    rgba(255, 23, 68, 0.06) 60%,
-    rgba(255, 23, 68, 0.12) 80%,
-    rgba(255, 23, 68, 0.08) 100%
+    transparent 20%,
+    rgba(255, 23, 68, 0.08) 50%,
+    rgba(255, 23, 68, 0.18) 75%,
+    rgba(255, 23, 68, 0.12) 100%
   );
   pointer-events: none;
   z-index: 1;
@@ -285,9 +285,10 @@ onMounted(() => {
   position: absolute;
   width: 2px;
   height: 150vh;
-  background: linear-gradient(to bottom, transparent, var(--neon-red), transparent);
+  background: linear-gradient(to bottom, transparent 20%, var(--neon-red) 50%, transparent 80%);
   transform-origin: center;
-  opacity: 0.2;
+  opacity: 0.3;
+  filter: blur(1px);
 }
 
 .night-content {
@@ -313,8 +314,9 @@ onMounted(() => {
 .panel-inner {
   position: relative;
   overflow: hidden;
-  border: 2px solid var(--smoke);
-  transition: border-color 0.3s ease;
+  border: 2px solid rgba(255, 23, 68, 0.15);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 0 20px rgba(255, 23, 68, 0.03);
 }
 
 .panel-inner:hover {
@@ -323,14 +325,41 @@ onMounted(() => {
 
 .panel-placeholder {
   aspect-ratio: 3/4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(26, 27, 58, 0.3);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(15, 5, 25, 0.9) 0%, rgba(25, 8, 18, 0.95) 100%);
 }
 
 .panel-2 .panel-placeholder {
   aspect-ratio: 1/1;
+}
+
+/* Atmospheric fills for each panel */
+.panel-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.panel-atmo--red {
+  background: radial-gradient(
+    ellipse at 70% 30%,
+    rgba(255, 23, 68, 0.12) 0%,
+    rgba(255, 23, 68, 0.04) 40%,
+    transparent 70%
+  );
+}
+
+.panel-atmo--slash {
+  background:
+    linear-gradient(150deg, transparent 35%, rgba(255, 23, 68, 0.08) 48%, rgba(255, 255, 255, 0.03) 50%, rgba(255, 23, 68, 0.08) 52%, transparent 65%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 23, 68, 0.06) 0%, transparent 60%);
+}
+
+.panel-atmo--mist {
+  background:
+    linear-gradient(to top, rgba(0, 229, 255, 0.03) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
 }
 
 .panel-caption {
@@ -389,6 +418,12 @@ onMounted(() => {
 
 .panel-inner:hover .panel-placeholder {
   transform: scale(1.05);
+}
+
+.panel-inner:hover .panel-atmosphere {
+  opacity: 1.5;
+  filter: brightness(1.3);
+  transition: filter 0.5s ease;
 }
 
 .panel-inner:hover .panel-caption span,

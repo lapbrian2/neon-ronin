@@ -34,7 +34,7 @@
 
       <!-- Subtitle -->
       <p ref="subtitleRef" class="hero-subtitle font-body text-ash text-lg mt-6 opacity-0 max-w-[40ch]">
-        A masterless blade in a city of electric ghosts.
+        Enter the rain.
       </p>
 
       <!-- Decorative line -->
@@ -329,9 +329,10 @@ onMounted(() => {
   pointer-events: none;
   background: radial-gradient(
     ellipse at 50% 100%,
-    rgba(255, 23, 68, 0.08) 0%,
-    rgba(170, 0, 255, 0.04) 30%,
-    transparent 60%
+    rgba(255, 23, 68, 0.12) 0%,
+    rgba(170, 0, 255, 0.06) 25%,
+    rgba(0, 229, 255, 0.03) 45%,
+    transparent 65%
   );
   opacity: 0;
 }
@@ -396,8 +397,8 @@ onMounted(() => {
 
 /* Breathing title glow */
 @keyframes title-breathe {
-  0%, 100% { text-shadow: 0 0 20px rgba(255,23,68,0.6), 0 0 60px rgba(255,23,68,0.2); }
-  50% { text-shadow: 0 0 30px rgba(255,23,68,0.8), 0 0 80px rgba(255,23,68,0.4), 0 0 120px rgba(255,23,68,0.1); }
+  0%, 100% { text-shadow: 0 0 20px rgba(255,23,68,0.7), 0 0 60px rgba(255,23,68,0.35), 0 0 100px rgba(255,23,68,0.15); }
+  50% { text-shadow: 0 0 30px rgba(255,23,68,0.9), 0 0 80px rgba(255,23,68,0.5), 0 0 140px rgba(255,23,68,0.2), 0 0 200px rgba(255,23,68,0.08); }
 }
 
 .glitch-text.neon-red.neon-flicker {

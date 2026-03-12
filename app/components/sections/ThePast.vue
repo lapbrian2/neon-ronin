@@ -47,13 +47,13 @@
       <!-- Poem/memory block -->
       <div ref="poemRef" class="past-poem mt-12">
         <p class="font-serif text-[1.25rem] text-ink-black leading-loose opacity-0 poem-line">
-          Before the neon —
+          Before the neon,
         </p>
         <p class="font-serif text-[1.25rem] text-ink-black leading-loose opacity-0 poem-line">
-          there was silence, and a sword,
+          silence. A blade.
         </p>
         <p class="font-serif text-[1.25rem] text-ink-black leading-loose opacity-0 poem-line">
-          and someone worth protecting.
+          Someone worth the weight of it.
         </p>
       </div>
 
@@ -76,7 +76,7 @@
       <!-- Ink wash image placeholder -->
       <div ref="imageRef" class="past-image-frame mt-12 opacity-0">
         <div class="past-image-placeholder">
-          <span class="text-ink-gray text-sm font-body">[ artwork: ink wash memory ]</span>
+          <div class="ink-wash-atmosphere" />
         </div>
         <!-- Hanko stamp -->
         <div class="hanko">
@@ -371,11 +371,28 @@ onMounted(() => {
 
 .past-image-placeholder {
   aspect-ratio: 4/3;
-  border: 1px solid var(--ink-gray);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(26, 24, 20, 0.03);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg,
+    rgba(26, 24, 20, 0.06) 0%,
+    rgba(139, 37, 0, 0.04) 30%,
+    rgba(26, 24, 20, 0.08) 60%,
+    rgba(74, 69, 64, 0.05) 100%
+  );
+  box-shadow:
+    inset 0 0 60px rgba(26, 24, 20, 0.08),
+    0 4px 20px rgba(26, 24, 20, 0.06);
+  border-radius: 2px;
+}
+
+.ink-wash-atmosphere {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(26, 24, 20, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(139, 37, 0, 0.06) 0%, transparent 40%),
+    linear-gradient(to bottom, transparent 60%, rgba(26, 24, 20, 0.06) 100%);
+  pointer-events: none;
 }
 
 /* Hanko stamp */
