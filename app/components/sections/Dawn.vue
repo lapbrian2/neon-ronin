@@ -1,498 +1,177 @@
 <template>
-  <section ref="sectionRef" class="dawn section section--fullscreen">
-    <!-- Background color transition — void to warm navy -->
-    <div ref="warmBg" class="dawn-warm-bg" />
+  <section id="road" ref="sectionRef" class="road-section">
+    <div class="section-inner">
+      <div class="chapter-num">六</div>
 
-    <!-- Warm gradient overlay that builds on scroll -->
-    <div ref="warmGlow" class="dawn-glow" />
-
-    <!-- Steam/mist particle layer -->
-    <div class="dawn-steam">
-      <div v-for="i in 6" :key="i" class="steam-wisp"
-        :style="{
-          left: `${10 + i * 15}%`,
-          animationDelay: `${i * 1.5}s`,
-          animationDuration: `${6 + i * 2}s`,
-          width: `${80 + i * 30}px`,
-          opacity: 0.03 + (i % 3) * 0.01,
-        }" />
-    </div>
-
-    <!-- Horizon line -->
-    <div ref="horizonRef" class="dawn-horizon" />
-
-    <!-- God rays -->
-    <div class="dawn-rays">
-      <div v-for="i in 5" :key="i" class="dawn-ray" :style="{ left: `${15 + i * 15}%`, animationDelay: `${i * 0.8}s`, opacity: 0.02 + (i % 3) * 0.01 }" />
-    </div>
-
-    <div class="dawn-content">
-      <!-- Chapter marker -->
-      <span ref="chapterRef" class="font-body uppercase tracking-[0.3em] text-sm text-ash opacity-0">
-        Chapter VI
-      </span>
-
-      <h2 ref="titleRef" class="font-display text-chapter tracking-display uppercase mt-4 leading-none opacity-0">
-        <span class="dawn-title-text">DAWN</span>
-      </h2>
-
-      <!-- Image placeholder — the morning scene -->
-      <div ref="imageRef" class="dawn-image mt-12 opacity-0">
-        <div class="dawn-image-placeholder">
-          <div class="dawn-atmosphere" />
-        </div>
-        <!-- Light leak overlay on image -->
-        <div class="dawn-light-leak" />
+      <div ref="headerRef" class="road-header">
+        <div class="section-subtitle">CHAPTER VI — THE ROAD CONTINUES</div>
+        <h2 class="section-title">
+          The path is wide<br />
+          <em>enough for two.</em>
+        </h2>
       </div>
 
-      <!-- Closing text -->
-      <div ref="closingRef" class="dawn-closing mt-12 opacity-0">
-        <p class="font-serif text-[1.25rem] text-light leading-relaxed max-w-[45ch] mx-auto">
-          The sword rests.
-        </p>
-      </div>
-
-      <!-- Separator with warm gradient -->
-      <div ref="separatorRef" class="dawn-separator mt-12 opacity-0" />
-
-      <!-- Credits / Footer -->
-      <div ref="creditsRef" class="dawn-credits mt-12 opacity-0">
-        <p class="font-display text-[2rem] tracking-display uppercase text-light">
-          NEON RONIN
-        </p>
-        <p class="font-body text-ash text-sm mt-2">
-          A scroll-driven anime experience
+      <div ref="bodyRef" class="road-body">
+        <p class="body-text">
+          Every alliance begins with a single step in the same direction.
+          The ronin does not recruit — but the road ahead forks, and
+          some destinations demand more than one blade.
         </p>
 
-        <div class="credits-divider mt-8" />
-
-        <p class="font-body text-smoke text-xs mt-6 uppercase tracking-[0.15em]">
-          Built by Brian Lapinski
-        </p>
-        <p class="font-body text-smoke text-xs mt-2">
-          Nuxt 4 &middot; Three.js &middot; GSAP &middot; Lenis
-        </p>
-
-        <!-- Back to top -->
-        <button ref="topBtn" data-cursor class="back-to-top mt-10 opacity-0" @click="scrollToTop">
-          <span class="top-arrow" />
-          <span class="font-body text-smoke text-xs uppercase tracking-[0.2em] mt-2 block">Back to Top</span>
-        </button>
+        <a href="mailto:hello@neonronin.art" class="road-cta" data-cursor>
+          <span class="cta-bg" />
+          Walk together
+          <span class="cta-arrow">→</span>
+        </a>
       </div>
     </div>
+
+    <!-- Footer -->
+    <footer ref="footerRef" class="site-footer">
+      <div class="footer-left">
+        <div class="footer-kanji">浪人</div>
+        <p class="footer-copy">NEON RONIN — 2026</p>
+      </div>
+      <p class="footer-quote">
+        "The masterless blade walks on<br />
+        because the road does not end."
+      </p>
+    </footer>
   </section>
 </template>
 
 <script setup lang="ts">
 const sectionRef = ref<HTMLElement | null>(null)
-const chapterRef = ref<HTMLElement | null>(null)
-const titleRef = ref<HTMLElement | null>(null)
-const imageRef = ref<HTMLElement | null>(null)
-const closingRef = ref<HTMLElement | null>(null)
-const creditsRef = ref<HTMLElement | null>(null)
-const warmBg = ref<HTMLElement | null>(null)
-const warmGlow = ref<HTMLElement | null>(null)
-const horizonRef = ref<HTMLElement | null>(null)
-const separatorRef = ref<HTMLElement | null>(null)
-const topBtn = ref<HTMLElement | null>(null)
+const headerRef = ref<HTMLElement | null>(null)
+const bodyRef = ref<HTMLElement | null>(null)
+const footerRef = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
 
 onMounted(() => {
   if (!sectionRef.value) return
 
-  // Background warms from cold void to navy/warm tint
-  createTimeline({
-    scrollTrigger: {
-      trigger: sectionRef.value,
-      start: 'top 90%',
-      end: 'center center',
-      scrub: 1,
-    },
-  }).to(warmBg.value, {
-    opacity: 1,
-    duration: 1,
-  })
-
-  // Warm glow builds on scroll — transition from dark to warm
-  createTimeline({
-    scrollTrigger: {
-      trigger: sectionRef.value,
-      start: 'top 80%',
-      end: 'top 20%',
-      scrub: 1,
-    },
-  }).to(warmGlow.value, {
-    opacity: 1,
-    duration: 1,
-  })
-
-  // Horizon line expands
-  gsap.set(horizonRef.value, { scaleX: 0, opacity: 0 })
-  createTimeline({
-    scrollTrigger: {
-      trigger: sectionRef.value,
-      start: 'top 60%',
-      end: 'top 20%',
-      scrub: 1,
-    },
-  }).to(horizonRef.value, {
-    scaleX: 1,
-    opacity: 1,
-    duration: 1,
-    ease: 'power2.inOut',
-  })
-
-  // Content entrance
-  gsap.set(imageRef.value, { y: 40, scale: 0.98 })
-  gsap.set(separatorRef.value, { scaleX: 0 })
+  gsap.set(headerRef.value, { opacity: 0, y: 60 })
+  gsap.set(bodyRef.value, { opacity: 0, y: 30 })
+  gsap.set(footerRef.value, { opacity: 0 })
 
   createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
-      start: 'top 50%',
+      start: 'top 70%',
       toggleActions: 'play none none none',
     },
   })
-    .to(chapterRef.value, {
-      opacity: 1,
-      duration: 0.8,
-    })
-    .to(
-      titleRef.value,
-      {
-        opacity: 1,
-        duration: 1.2,
-        ease: 'power2.out',
-      },
-      '-=0.4'
-    )
-    .to(
-      imageRef.value,
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1.2,
-        ease: 'power2.out',
-      },
-      '-=0.6'
-    )
-    .to(
-      closingRef.value,
-      {
-        opacity: 1,
-        duration: 1,
-        ease: 'power2.out',
-      },
-      '-=0.4'
-    )
-    .to(
-      separatorRef.value,
-      {
-        opacity: 1,
-        scaleX: 1,
-        duration: 0.8,
-        ease: 'power2.inOut',
-      },
-      '-=0.3'
-    )
-    .add(() => {
-      if (creditsRef.value) {
-        creditsRef.value.style.opacity = '1'
-        const creditEls = creditsRef.value.querySelectorAll('p, .credits-divider')
-        gsap.set(creditEls, { y: 15, opacity: 0 })
-        gsap.to(creditEls, {
-          y: 0, opacity: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power2.out',
-        })
-      }
-    }, '-=0.2')
-    .to(
-      topBtn.value,
-      {
-        opacity: 1,
-        duration: 0.8,
-        ease: 'power2.out',
-      },
-      '-=0.4'
-    )
+    .to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+    .to(bodyRef.value, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.4')
+    .to(footerRef.value, { opacity: 1, duration: 1, ease: 'power2.out' }, '-=0.2')
 })
 </script>
 
 <style scoped>
-.dawn {
+.road-section {
+  padding: 120px 0 0;
   position: relative;
-  min-height: 100vh;
-  background-color: var(--void);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6rem 2rem;
-  overflow: hidden;
+  background: var(--cream);
 }
 
-.dawn-warm-bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(30, 20, 40, 0.8) 0%,
-    rgba(40, 25, 20, 0.6) 40%,
-    rgba(50, 30, 15, 0.4) 70%,
-    rgba(60, 35, 10, 0.3) 100%
-  );
-  opacity: 0;
-  pointer-events: none;
-}
-
-.dawn-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at 50% 20%,
-    rgba(255, 215, 64, 0.1) 0%,
-    rgba(255, 180, 50, 0.05) 30%,
-    rgba(255, 140, 40, 0.02) 50%,
-    transparent 70%
-  );
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Steam wisps */
-.dawn-steam {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.steam-wisp {
-  position: absolute;
-  bottom: 20%;
-  height: 200px;
-  background: radial-gradient(ellipse at center, rgba(255, 215, 64, 0.06) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: steam-rise linear infinite;
-  filter: blur(30px);
-}
-
-@keyframes steam-rise {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  20% { opacity: 0.04; }
-  80% { opacity: 0.02; }
-  100% { transform: translateY(-40vh) scale(1.5); opacity: 0; }
-}
-
-/* Horizon line */
-.dawn-horizon {
-  position: absolute;
-  top: 35%;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(255, 215, 64, 0.15), rgba(255, 180, 50, 0.1), transparent);
-  transform-origin: center;
-  z-index: 1;
-}
-
-/* God rays */
-.dawn-rays {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
-
-.dawn-ray {
-  position: absolute;
-  top: -20%;
-  width: 2px;
-  height: 140%;
-  background: linear-gradient(to bottom, rgba(255, 215, 64, 0.08), rgba(255, 180, 50, 0.02), transparent);
-  transform: rotate(5deg);
-  animation: ray-sway 8s ease-in-out infinite alternate;
-  filter: blur(8px);
-}
-
-.dawn-ray:nth-child(2n) {
-  transform: rotate(-3deg);
-  width: 3px;
-  filter: blur(12px);
-}
-
-.dawn-ray:nth-child(3n) {
-  transform: rotate(8deg);
-  filter: blur(6px);
-}
-
-@keyframes ray-sway {
-  0% { transform: rotate(3deg) translateX(0); }
-  100% { transform: rotate(-3deg) translateX(20px); }
-}
-
-.dawn-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 800px;
-  width: 100%;
-}
-
-/* Title with warm glow */
-@keyframes dawn-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-.dawn-title-text {
-  color: var(--neon-amber);
-  text-shadow: 0 0 40px rgba(255, 215, 64, 0.3), 0 0 80px rgba(255, 215, 64, 0.1);
-  animation: dawn-float 5s ease-in-out infinite;
-  display: inline-block;
-}
-
-.dawn-image {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.dawn-image-placeholder {
-  aspect-ratio: 16/9;
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  background: linear-gradient(135deg,
-    rgba(60, 35, 10, 0.15) 0%,
-    rgba(255, 180, 50, 0.06) 30%,
-    rgba(40, 25, 20, 0.12) 60%,
-    rgba(60, 35, 10, 0.08) 100%
-  );
-  box-shadow:
-    inset 0 0 80px rgba(255, 215, 64, 0.04),
-    0 4px 30px rgba(0, 0, 0, 0.2);
-}
-
-.dawn-atmosphere {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 70% 30%, rgba(255, 215, 64, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 30% 70%, rgba(255, 140, 40, 0.06) 0%, transparent 40%),
-    linear-gradient(to right, rgba(255, 215, 64, 0.02), transparent 30%, transparent 70%, rgba(255, 180, 50, 0.03));
-  pointer-events: none;
-  animation: dawn-atmo-pulse 6s ease-in-out infinite alternate;
-}
-
-@keyframes dawn-atmo-pulse {
-  0% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-/* Light leak on image */
-.dawn-light-leak {
-  position: absolute;
-  top: 0;
-  right: -10%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(to left, rgba(255, 215, 64, 0.08), transparent);
-  pointer-events: none;
-  border-radius: 4px;
-}
-
-.dawn-closing {
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Separator */
-.dawn-separator {
-  width: 200px;
-  height: 1px;
+.section-inner {
+  max-width: 1100px;
   margin: 0 auto;
-  background: linear-gradient(to right, transparent, var(--neon-amber), transparent);
-  transform-origin: center;
+  padding: 0 48px;
+  position: relative;
 }
 
-.dawn-credits {
-  padding-top: 1rem;
+.road-body {
+  margin-top: 40px;
 }
 
-.credits-divider {
-  width: 40px;
-  height: 1px;
-  background: var(--smoke);
-  margin: 0 auto;
-  opacity: 0.3;
-}
-
-/* Back to top button */
-.back-to-top {
-  display: flex;
-  flex-direction: column;
+.road-cta {
+  display: inline-flex;
   align-items: center;
-  background: none;
-  border: none;
-  cursor: none;
-  padding: 1rem;
-  transition: opacity 0.3s ease;
+  gap: 16px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  padding: 18px 40px;
+  border: 1px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s, border-color 0.4s;
+  margin-top: 48px;
 }
 
-.back-to-top:hover {
-  opacity: 1 !important;
+.road-cta:hover {
+  color: var(--cream);
+  border-color: var(--blood-red);
 }
 
-.back-to-top:hover .top-arrow {
-  border-color: var(--neon-amber);
-  transform: translateY(-4px) rotate(-135deg);
+.cta-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--blood-red);
+  transform: translateX(-101%);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: -1;
 }
 
-.top-arrow {
-  display: block;
-  width: 12px;
-  height: 12px;
-  border-top: 1px solid var(--smoke);
-  border-left: 1px solid var(--smoke);
-  transform: rotate(-135deg);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+.road-cta:hover .cta-bg {
+  transform: translateX(0);
 }
 
-
-/* Horizon pulse — warm light breathing */
-@keyframes horizon-pulse {
-  0%, 100% { opacity: 0.8; filter: blur(0px); }
-  50% { opacity: 1; filter: blur(1px); }
+.cta-arrow {
+  font-size: 14px;
 }
 
-.dawn-horizon {
-  animation: horizon-pulse 5s ease-in-out infinite;
+/* Footer */
+.site-footer {
+  padding: 80px 48px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid rgba(10, 10, 15, 0.06);
+  margin-top: 120px;
 }
 
-/* Credits text stagger entrance */
-.dawn-credits p {
-  will-change: transform, opacity;
+.footer-kanji {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 900;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.footer-copy {
+  font-size: 11px;
+  color: var(--warm-gray);
+  letter-spacing: 2px;
+}
+
+.footer-quote {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--warm-gray);
+  max-width: 300px;
+  text-align: right;
+  line-height: 1.7;
 }
 
 @media (max-width: 768px) {
-  .dawn {
-    padding: 4rem 1.5rem;
+  .section-inner {
+    padding: 0 24px;
   }
-
-  .dawn-steam {
-    display: none;
+  .site-footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 32px;
+    padding: 60px 24px 32px;
+  }
+  .footer-quote {
+    text-align: center;
+    max-width: 100%;
   }
 }
 </style>

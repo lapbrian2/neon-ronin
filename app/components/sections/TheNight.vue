@@ -1,461 +1,155 @@
 <template>
-  <section ref="sectionRef" class="the-night section">
-    <!-- Red action vignette -->
-    <div ref="redVignette" class="night-vignette" />
+  <section id="battles" ref="sectionRef" class="battles-section">
+    <div class="section-inner">
+      <div class="chapter-num">五</div>
 
-    <!-- Speed lines background -->
-    <div ref="speedLines" class="speed-lines-container">
-      <div v-for="i in 16" :key="i" class="speed-line-ray" :style="{ transform: `rotate(${i * 22.5}deg)` }" />
+      <div ref="headerRef" class="battles-header">
+        <div class="section-subtitle">CHAPTER V — BATTLES WON</div>
+        <h2 class="section-title">
+          The clearing after<br />
+          <em>the storm.</em>
+        </h2>
+      </div>
+
+      <div ref="projectsRef" class="projects-grid">
+        <div v-for="(project, i) in projects" :key="i" class="ink-card project-card"
+          :style="{ borderLeftColor: i === 0 ? 'var(--blood-red)' : 'rgba(10,10,15,0.08)' }">
+          <div class="project-type">{{ project.type }}</div>
+          <h3 class="project-name">{{ project.title }}</h3>
+          <p class="project-desc">{{ project.desc }}</p>
+        </div>
+      </div>
     </div>
 
-    <!-- Ember/spark particles (client-only canvas) -->
-
-    <ClientOnly>
-      <ThreeEmberCanvas />
-    </ClientOnly>
-
-    <!-- Sword slash trail (scroll-driven canvas) -->
-    <ClientOnly>
-      <ThreeSlashTrail />
-    </ClientOnly>
-
-    <div class="night-content">
-      <!-- Chapter marker -->
-      <span ref="chapterRef" class="font-body text-ash uppercase tracking-[0.3em] text-sm opacity-0">
-        Chapter V
-      </span>
-
-      <h2 ref="titleRef" class="font-display text-chapter tracking-display uppercase mt-4 leading-none">
-        <span class="neon-red">THE NIGHT</span>
-      </h2>
-
-      <p ref="subtextRef" class="font-body text-ash mt-4 max-w-[40ch] mx-auto opacity-0">
-        Some debts are only settled in blood.
-      </p>
-
-      <!-- Action panels — manga-style grid -->
-      <div ref="panelsRef" class="night-panels mt-16">
-        <div class="night-panel panel-1 opacity-0">
-          <div class="panel-inner">
-            <div class="panel-placeholder">
-              <div class="panel-atmosphere panel-atmo--red" />
-            </div>
-            <div class="panel-caption">
-              <span class="font-display text-[1.5rem] text-light uppercase tracking-display panel-text-glow">DRAW</span>
-            </div>
-            <!-- Panel flash overlay -->
-            <div class="panel-flash" />
-          </div>
-        </div>
-
-        <div class="night-panel panel-2 opacity-0">
-          <div class="panel-inner">
-            <div class="panel-placeholder">
-              <div class="panel-atmosphere panel-atmo--slash" />
-            </div>
-            <!-- Slash effect across panel -->
-            <div class="panel-slash" />
-            <div class="panel-flash" />
-          </div>
-        </div>
-
-        <div class="night-panel panel-3 opacity-0">
-          <div class="panel-inner">
-            <div class="panel-placeholder">
-              <div class="panel-atmosphere panel-atmo--mist" />
-            </div>
-            <div class="panel-caption panel-caption--bottom">
-              <span class="font-body text-ash text-sm italic">One breath. One cut. Done.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Closing impact text -->
-      <div ref="impactRef" class="night-impact mt-16 opacity-0">
-        <p class="font-display text-[clamp(1.5rem,4vw,3rem)] tracking-display uppercase text-light">
-          THE BLADE <span class="neon-red">REMEMBERS</span>
-        </p>
-      </div>
+    <!-- Ink divider -->
+    <div class="ink-divider-wrap">
+      <svg width="300" height="12" viewBox="0 0 300 12">
+        <path d="M0,6 Q30,2 60,6 Q90,10 120,5 Q150,1 180,7 Q210,11 240,5 Q270,2 300,6"
+          stroke="var(--ink)" stroke-width="1.5" fill="none" opacity="0.25" stroke-linecap="round" />
+        <circle cx="150" cy="6" r="3" fill="var(--blood-red)" opacity="0.6" />
+      </svg>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 const sectionRef = ref<HTMLElement | null>(null)
-const chapterRef = ref<HTMLElement | null>(null)
-const titleRef = ref<HTMLElement | null>(null)
-const subtextRef = ref<HTMLElement | null>(null)
-const panelsRef = ref<HTMLElement | null>(null)
-const speedLines = ref<HTMLElement | null>(null)
-const impactRef = ref<HTMLElement | null>(null)
-const redVignette = ref<HTMLElement | null>(null)
+const headerRef = ref<HTMLElement | null>(null)
+const projectsRef = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
+
+const projects = [
+  {
+    title: 'The Vernissage',
+    type: 'Immersive 3D Gallery',
+    desc: 'A virtual exhibition space built in Three.js where art breathes and walls dissolve as you scroll through the collection.',
+  },
+  {
+    title: 'Style DNA System',
+    type: 'Methodology & Tool',
+    desc: '30+ artist extractions. A shader-based framework that treats every image as frozen computation and reverse-engineers the algorithm beneath.',
+  },
+  {
+    title: 'Workflow X-Ray',
+    type: 'Consulting Diagnostic',
+    desc: 'Lean methodology applied to AI adoption pipelines. Tollgate frameworks, FMEA analysis, and remediation plans for creative organizations.',
+  },
+  {
+    title: 'Lonely Hollow',
+    type: 'Immersive Web World',
+    desc: 'An atmospheric 3D web experience where environment tells the story. Scroll-driven narrative through a haunted landscape.',
+  },
+]
 
 onMounted(() => {
   if (!sectionRef.value) return
 
-  // Red vignette builds intensity through section
-  createTimeline({
-    scrollTrigger: {
-      trigger: sectionRef.value,
-      start: 'top 60%',
-      end: 'bottom 40%',
-      scrub: 1,
-    },
-  }).fromTo(redVignette.value,
-    { opacity: 0 },
-    { opacity: 1, ease: 'power2.in' }
-  )
+  gsap.set(headerRef.value, { opacity: 0, y: 60 })
+  const cards = projectsRef.value?.querySelectorAll('.project-card')
+  if (cards) gsap.set(cards, { opacity: 0, y: 40 })
 
-  // Speed lines pulse on scroll
   createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
-      start: 'top 80%',
-      end: 'bottom 20%',
-      scrub: 1,
-    },
-  }).fromTo(
-    speedLines.value,
-    { opacity: 0, scale: 0.5 },
-    { opacity: 0.2, scale: 1.8, ease: 'power2.out' }
-  )
-
-  // Chapter + title entrance
-  createTimeline({
-    scrollTrigger: {
-      trigger: sectionRef.value,
-      start: 'top 60%',
+      start: 'top 70%',
       toggleActions: 'play none none none',
     },
   })
-    .to(chapterRef.value, {
-      opacity: 1,
-      duration: 0.6,
-    })
-    .from(
-      titleRef.value,
-      {
-        scale: 1.5,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      },
-      '-=0.2'
-    )
-    .to(
-      subtextRef.value,
-      {
-        opacity: 1,
-        duration: 0.6,
-      },
-      '-=0.3'
-    )
-
-  // Manga panels — stagger with unique transforms
-  const panels = panelsRef.value?.querySelectorAll('.night-panel')
-  if (panels) {
-    gsap.set(panels[0], { x: -80, rotation: -5, scale: 0.85 })
-    gsap.set(panels[1], { y: 80, scale: 0.8 })
-    gsap.set(panels[2], { x: 80, rotation: 5, scale: 0.85 })
-
-    const panelTl = createTimeline({
-      scrollTrigger: {
-        trigger: panelsRef.value,
-        start: 'top 75%',
-        toggleActions: 'play none none none',
-      },
-    })
-
-    panelTl.to(panels, {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      rotation: 0,
-      scale: 1,
-      duration: 1,
-      stagger: 0.15,
-      ease: 'power3.out',
-    })
-
-    // Flash each panel sequentially after they land
-    const flashes = panelsRef.value?.querySelectorAll('.panel-flash')
-    if (flashes) {
-      panelTl.to(flashes, {
-        opacity: 0.3,
-        duration: 0.05,
-        stagger: 0.15,
-      }, '-=0.3')
-      panelTl.to(flashes, {
-        opacity: 0,
-        duration: 0.3,
-        stagger: 0.15,
-      })
-    }
-
-    // Screen shake on panel impact
-    panelTl.to(sectionRef.value, {
-      x: -6,
-      duration: 0.03,
-    }, "-=0.25")
-    panelTl.to(sectionRef.value, {
-      x: 6,
-      duration: 0.03,
-    })
-    panelTl.to(sectionRef.value, {
-      x: -3,
-      duration: 0.03,
-    })
-    panelTl.to(sectionRef.value, {
-      x: 0,
-      duration: 0.1,
-      ease: "power2.out",
-    })
-
-    // Slash effect on panel 2
-    const slash = panelsRef.value?.querySelector('.panel-slash')
-    if (slash) {
-      gsap.set(slash, { scaleX: 0 })
-      panelTl.to(slash, {
-        scaleX: 1,
-        duration: 0.3,
-        ease: 'power4.in',
-      }, '-=0.5')
-    }
-  }
-
-  // Impact text
-  gsap.set(impactRef.value, { y: 30, scale: 0.95 })
-  createTimeline({
-    scrollTrigger: {
-      trigger: impactRef.value,
-      start: 'top 85%',
-      toggleActions: 'play none none none',
-    },
-  }).to(impactRef.value, {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    duration: 0.8,
-    ease: 'power3.out',
-  })
+    .to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+    .to(cards, {
+      opacity: 1, y: 0,
+      duration: 0.8, stagger: 0.15,
+      ease: 'power2.out',
+    }, '-=0.4')
 })
 </script>
 
 <style scoped>
-.the-night {
+.battles-section {
+  padding: 120px 0;
   position: relative;
-  min-height: 100vh;
-  background: radial-gradient(ellipse at center, #1a0a2a 0%, #120520 40%, var(--void) 80%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 6rem 2rem;
+  background: var(--cream);
 }
 
-.night-vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 20%,
-    rgba(255, 23, 68, 0.08) 50%,
-    rgba(255, 23, 68, 0.18) 75%,
-    rgba(255, 23, 68, 0.12) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-}
-
-.speed-lines-container {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.speed-line-ray {
-  position: absolute;
-  width: 2px;
-  height: 150vh;
-  background: linear-gradient(to bottom, transparent 20%, var(--neon-red) 50%, transparent 80%);
-  transform-origin: center;
-  opacity: 0.3;
-  filter: blur(1px);
-}
-
-.night-content {
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 48px;
   position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 1000px;
-  width: 100%;
 }
 
-/* Manga panel grid */
-.night-panels {
+.projects-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 0.8fr;
-  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.project-card {
+  cursor: default;
+  transition: border-left-color 0.4s, background 0.4s;
+}
+
+.project-card:hover {
+  border-left-color: var(--blood-red) !important;
+}
+
+.project-type {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--blood-red);
+  margin-bottom: 12px;
+}
+
+.project-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.project-desc {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--warm-gray);
+  font-weight: 300;
+}
+
+.ink-divider-wrap {
   width: 100%;
-}
-
-.night-panel {
-  will-change: transform, opacity;
-}
-
-.panel-inner {
-  position: relative;
-  overflow: hidden;
-  border: 2px solid rgba(255, 23, 68, 0.15);
-  transition: border-color 0.4s ease, box-shadow 0.4s ease;
-  box-shadow: 0 0 20px rgba(255, 23, 68, 0.03);
-}
-
-.panel-inner:hover {
-  border-color: var(--neon-red);
-}
-
-.panel-placeholder {
-  aspect-ratio: 3/4;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba(15, 5, 25, 0.9) 0%, rgba(25, 8, 18, 0.95) 100%);
-}
-
-.panel-2 .panel-placeholder {
-  aspect-ratio: 1/1;
-}
-
-/* Atmospheric fills for each panel */
-.panel-atmosphere {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.panel-atmo--red {
-  background: radial-gradient(
-    ellipse at 70% 30%,
-    rgba(255, 23, 68, 0.12) 0%,
-    rgba(255, 23, 68, 0.04) 40%,
-    transparent 70%
-  );
-}
-
-.panel-atmo--slash {
-  background:
-    linear-gradient(150deg, transparent 35%, rgba(255, 23, 68, 0.08) 48%, rgba(255, 255, 255, 0.03) 50%, rgba(255, 23, 68, 0.08) 52%, transparent 65%),
-    radial-gradient(ellipse at 50% 50%, rgba(255, 23, 68, 0.06) 0%, transparent 60%);
-}
-
-.panel-atmo--mist {
-  background:
-    linear-gradient(to top, rgba(0, 229, 255, 0.03) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
-}
-
-.panel-caption {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 2;
-}
-
-.panel-caption--bottom {
-  top: auto;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-  text-align: center;
-}
-
-.panel-text-glow {
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
-}
-
-/* Panel flash overlay */
-.panel-flash {
-  position: absolute;
-  inset: 0;
-  background: white;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* Slash effect */
-.panel-slash {
-  position: absolute;
-  top: 30%;
-  left: -10%;
-  right: -10%;
-  height: 3px;
-  background: linear-gradient(to right, transparent, white, var(--neon-red), white, transparent);
-  transform: rotate(-15deg) scaleX(0);
-  transform-origin: left center;
-  z-index: 4;
-  box-shadow: 0 0 15px rgba(255, 23, 68, 0.5), 0 0 30px rgba(255, 23, 68, 0.3);
-}
-
-/* Impact text */
-.night-impact {
-  will-change: transform, opacity;
-}
-
-
-/* Manga panel hover zoom — contained by overflow:hidden on panel-inner */
-.panel-placeholder {
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.panel-inner:hover .panel-placeholder {
-  transform: scale(1.05);
-}
-
-.panel-inner:hover .panel-atmosphere {
-  opacity: 1.5;
-  filter: brightness(1.3);
-  transition: filter 0.5s ease;
-}
-
-.panel-inner:hover .panel-caption span,
-.panel-inner:hover .panel-caption--bottom span {
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
-}
-
-/* Red accent glow on panel border hover */
-.panel-inner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1px solid transparent;
-  transition: border-color 0.4s ease, box-shadow 0.4s ease;
-  pointer-events: none;
-  z-index: 6;
-}
-
-.panel-inner:hover::after {
-  border-color: rgba(255, 23, 68, 0.3);
-  box-shadow: inset 0 0 30px rgba(255, 23, 68, 0.05);
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
 }
 
 @media (max-width: 768px) {
-  .night-panels {
+  .projects-grid {
     grid-template-columns: 1fr;
-    max-width: 400px;
-    margin: 0 auto;
   }
-
-  .panel-2 .panel-placeholder {
-    aspect-ratio: 3/4;
+  .section-inner {
+    padding: 0 24px;
   }
 }
 </style>
