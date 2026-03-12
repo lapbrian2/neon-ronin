@@ -345,9 +345,16 @@ onMounted(() => {
 }
 
 /* Title with warm glow */
+@keyframes dawn-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
 .dawn-title-text {
   color: var(--neon-amber);
   text-shadow: 0 0 40px rgba(255, 215, 64, 0.3), 0 0 80px rgba(255, 215, 64, 0.1);
+  animation: dawn-float 5s ease-in-out infinite;
+  display: inline-block;
 }
 
 .dawn-image {

@@ -195,6 +195,25 @@ onMounted(() => {
       })
     }
 
+    // Screen shake on panel impact
+    panelTl.to(sectionRef.value, {
+      x: -6,
+      duration: 0.03,
+    }, "-=0.25")
+    panelTl.to(sectionRef.value, {
+      x: 6,
+      duration: 0.03,
+    })
+    panelTl.to(sectionRef.value, {
+      x: -3,
+      duration: 0.03,
+    })
+    panelTl.to(sectionRef.value, {
+      x: 0,
+      duration: 0.1,
+      ease: "power2.out",
+    })
+
     // Slash effect on panel 2
     const slash = panelsRef.value?.querySelector('.panel-slash')
     if (slash) {

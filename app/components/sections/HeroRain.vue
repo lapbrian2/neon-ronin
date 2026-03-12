@@ -141,6 +141,44 @@ onMounted(() => {
       '-=0.3'
     )
 
+  // Multi-layer parallax — each element moves at different speed
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1,
+    },
+  }).to(chapterRef.value, {
+    y: -80,
+    ease: 'none',
+  })
+
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1,
+    },
+  }).to(subtitleRef.value, {
+    y: -200,
+    ease: 'none',
+  })
+
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 1,
+    },
+  }).to(scrollRef.value, {
+    y: -250,
+    opacity: 0,
+    ease: 'none',
+  })
+
   // Scroll-driven fade out + parallax
   createTimeline({
     scrollTrigger: {
@@ -334,6 +372,16 @@ onMounted(() => {
 @keyframes chevron-pulse {
   0%, 100% { opacity: 0.3; transform: rotate(45deg) translateY(0); }
   50% { opacity: 1; transform: rotate(45deg) translateY(4px); }
+}
+
+/* Breathing title glow */
+@keyframes title-breathe {
+  0%, 100% { text-shadow: 0 0 20px rgba(255,23,68,0.6), 0 0 60px rgba(255,23,68,0.2); }
+  50% { text-shadow: 0 0 30px rgba(255,23,68,0.8), 0 0 80px rgba(255,23,68,0.4), 0 0 120px rgba(255,23,68,0.1); }
+}
+
+.glitch-text.neon-red.neon-flicker {
+  animation: neon-flicker 4s ease-in-out infinite, title-breathe 6s ease-in-out infinite;
 }
 
 /* Mobile */

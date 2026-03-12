@@ -7,6 +7,20 @@
     <div class="ink-texture" />
     <div class="paper-grain" />
 
+    <!-- Floating dust motes -->
+    <div class="dust-motes">
+      <div v-for="i in 12" :key="i" class="dust-mote"
+        :style="{
+          left: (5 + (i * 8) % 90) + '%',
+          top: (10 + (i * 13) % 80) + '%',
+          animationDelay: (i * 1.2) + 's',
+          animationDuration: (8 + (i % 4) * 3) + 's',
+          width: (2 + (i % 3)) + 'px',
+          height: (2 + (i % 3)) + 'px',
+          opacity: 0.08 + (i % 4) * 0.03,
+        }" />
+    </div>
+
     <!-- Brush stroke decorations -->
     <div class="brush-stroke brush-stroke--top" />
     <div class="brush-stroke brush-stroke--bottom" />
@@ -405,6 +419,29 @@ onMounted(() => {
   height: 25%;
   opacity: 0.06;
   width: 2px;
+}
+
+/* Floating dust motes */
+.dust-motes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.dust-mote {
+  position: absolute;
+  background: var(--ink-gray);
+  border-radius: 50%;
+  animation: dust-float linear infinite;
+}
+
+@keyframes dust-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(15px, -20px) scale(1.2); }
+  50% { transform: translate(-10px, -10px) scale(0.8); }
+  75% { transform: translate(20px, 15px) scale(1.1); }
 }
 
 @media (max-width: 768px) {
