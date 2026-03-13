@@ -69,8 +69,10 @@ onMounted(() => {
 
   const footerLeft = footerRef.value?.querySelector('.footer-left')
   const footerQuote = footerRef.value?.querySelector('.footer-quote')
-  if (footerLeft) gsap.set(footerLeft, { opacity: 0, y: 20 })
-  if (footerQuote) gsap.set(footerQuote, { opacity: 0, x: 30 })
+  const footerKanji = footerRef.value?.querySelector('.footer-kanji')
+  if (footerLeft) gsap.set(footerLeft, { opacity: 0, y: 40 })
+  if (footerQuote) gsap.set(footerQuote, { opacity: 0, x: 50 })
+  if (footerKanji) gsap.set(footerKanji, { scale: 1.8, opacity: 0 })
 
   // Image fade in on scroll
   createTimeline({
@@ -99,15 +101,30 @@ onMounted(() => {
     .to(headerRef.value, { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: 'power3.out' })
     .to(bodyRef.value, { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out' }, '-=0.6')
 
-  createTimeline({
+  // Footer reveals with dramatic kanji scale-down
+  const footerTl = createTimeline({
     scrollTrigger: {
       trigger: footerRef.value,
       start: 'top 85%',
       toggleActions: 'play none none none',
     },
   })
-    .to(footerLeft, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
-    .to(footerQuote, { opacity: 1, x: 0, duration: 0.8, ease: 'power2.out' }, '-=0.4')
+  if (footerKanji) {
+    footerTl.to(footerKanji, { scale: 1, opacity: 1, duration: 1, ease: 'power3.out' })
+  }
+  footerTl.to(footerLeft, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6')
+  footerTl.to(footerQuote, { opacity: 1, x: 0, duration: 0.8, ease: 'power2.out' }, '-=0.4')
+
+  // Counter-parallax: footer rises slightly as you scroll to it
+  gsap.set(footerRef.value, { y: 30 })
+  createTimeline({
+    scrollTrigger: {
+      trigger: footerRef.value,
+      start: 'top bottom',
+      end: 'top 70%',
+      scrub: 0.5,
+    },
+  }).to(footerRef.value, { y: 0, ease: 'none' })
 })
 </script>
 
@@ -177,13 +194,14 @@ onMounted(() => {
   border: 1px solid rgba(242, 235, 224, 0.3);
   position: relative;
   overflow: hidden;
-  transition: color 0.4s, border-color 0.4s;
+  transition: color 0.4s, border-color 0.4s, letter-spacing 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   margin-top: 48px;
 }
 
 .road-cta:hover {
   color: var(--cream);
   border-color: var(--blood-red);
+  letter-spacing: 5px;
 }
 
 .cta-bg {

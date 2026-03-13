@@ -218,9 +218,9 @@ onMounted(() => {
   color: var(--cream); text-decoration: none;
   font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
   padding: 14px 0; border-bottom: 1px solid rgba(242, 235, 224, 0.4);
-  transition: border-color 0.4s, color 0.4s;
+  transition: border-color 0.4s, color 0.4s, letter-spacing 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.cta-link:hover { border-color: var(--blood-red); color: var(--blood-red); }
+.cta-link:hover { border-color: var(--blood-red); color: var(--blood-red); letter-spacing: 5px; }
 .cta-link:hover .cta-arrow { animation: arrowBounce 0.6s ease infinite; }
 .cta-arrow { font-size: 16px; display: inline-block; }
 @keyframes arrowBounce {

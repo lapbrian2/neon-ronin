@@ -51,7 +51,7 @@ const trackWrapRef = ref<HTMLElement | null>(null)
 const trackRef = ref<HTMLElement | null>(null)
 const progressRef = ref<HTMLElement | null>(null)
 
-const { createTimeline, gsap, splitTextReveal, ScrollTrigger } = useScrollAnimation()
+const { createTimeline, createTrigger, gsap, splitTextReveal, ScrollTrigger } = useScrollAnimation()
 
 const battles = [
   {
@@ -98,10 +98,17 @@ onMounted(() => {
   const viewportWidth = trackWrapRef.value.offsetWidth
   const scrollDistance = totalWidth - viewportWidth
 
-  // Set initial state for battle cards — stagger reveal
+  // Set initial state for battle cards — varied positions for organic feel
   const cards = trackRef.value.querySelectorAll('.battle-card')
-  cards.forEach((card) => {
-    gsap.set(card, { opacity: 0, y: 40 })
+  const entryOffsets = [
+    { y: 50, rotation: 1.5, scale: 0.96 },
+    { y: 65, rotation: -1, scale: 0.94 },
+    { y: 45, rotation: 2, scale: 0.97 },
+    { y: 55, rotation: -1.5, scale: 0.95 },
+  ]
+  cards.forEach((card, i) => {
+    const entry = entryOffsets[i % entryOffsets.length]
+    gsap.set(card, { opacity: 0, y: entry.y, rotation: entry.rotation, scale: entry.scale })
   })
 
   // Horizontal scroll: pin + scrub
@@ -127,23 +134,43 @@ onMounted(() => {
     ease: 'none',
   }, 0)
 
-  // Reveal cards based on scroll progress
+  // Scramble text effect for battle indices
+  function scrambleText(el: Element, finalText: string) {
+    const chars = '0123456789—·×→'
+    let iterations = 0
+    const interval = setInterval(() => {
+      el.textContent = finalText.split('').map((char, j) => {
+        if (j < iterations) return finalText[j]
+        return chars[Math.floor(Math.random() * chars.length)]
+      }).join('')
+      if (iterations >= finalText.length) clearInterval(interval)
+      iterations += 0.4
+    }, 30)
+  }
+
+  // Reveal cards with varied timing + scramble indices
+  const revealEases = ['power3.out', 'back.out(1.2)', 'power4.out', 'power3.out']
+  const revealDurations = [0.9, 1.0, 1.1, 0.85]
   const revealedCards = new Set<number>()
-  ScrollTrigger.create({
+
+  createTrigger({
     trigger: sectionRef.value,
     start: 'top top',
     end: () => '+=' + scrollDistance,
     onUpdate: (self) => {
       const progress = self.progress
       cards.forEach((card, i) => {
-        // Each card reveals when its portion of the scroll begins
         const threshold = (i * 0.8) / cards.length
         if (progress >= threshold && !revealedCards.has(i)) {
           revealedCards.add(i)
           gsap.to(card, {
-            opacity: 1, y: 0,
-            duration: 0.8, ease: 'power3.out',
+            opacity: 1, y: 0, rotation: 0, scale: 1,
+            duration: revealDurations[i % revealDurations.length],
+            ease: revealEases[i % revealEases.length],
           })
+          // Scramble the index number
+          const indexEl = card.querySelector('.battle-index')
+          if (indexEl) scrambleText(indexEl, indexEl.textContent || '')
         }
       })
     },
@@ -222,6 +249,12 @@ onMounted(() => {
 
 .battle-card:hover {
   border-color: rgba(140, 26, 26, 0.3);
+  background: linear-gradient(135deg, rgba(140, 26, 26, 0.04), transparent 60%);
+}
+
+.battle-card:hover .battle-divider {
+  width: 60px;
+  opacity: 0.8;
 }
 
 .battle-index {
@@ -238,6 +271,7 @@ onMounted(() => {
   background: var(--blood-red);
   opacity: 0.5;
   margin-bottom: 28px;
+  transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s;
 }
 
 .battle-statement {
@@ -264,11 +298,12 @@ onMounted(() => {
   opacity: 0.5;
   padding: 4px 0;
   border-bottom: 1px solid rgba(242, 235, 224, 0.08);
-  transition: opacity 0.3s, color 0.3s;
+  transition: opacity 0.3s, color 0.3s, transform 0.3s;
 }
 
 .battle-card:hover .tech-tag {
   opacity: 0.8;
+  transform: translateY(-1px);
 }
 
 /* Progress bar */

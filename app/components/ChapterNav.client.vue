@@ -1,15 +1,19 @@
 <template>
-  <nav class="chapter-nav" :class="{ 'chapter-nav--ink': activeChapter === 'past' }">
+  <nav class="chapter-nav" :class="{ 'chapter-nav--light': isLightSection }">
     <div
       v-for="chapter in chapters"
       :key="chapter.id"
       class="chapter-dot-group"
       :class="{ active: activeChapter === chapter.id }"
-      @click="scrollToChapter(chapter.id)"
+      role="button"
+      tabindex="0"
+      :aria-label="'Navigate to chapter ' + chapter.label"
       data-cursor
+      @click="scrollToChapter(chapter.id)"
+      @keydown.enter="scrollToChapter(chapter.id)"
     >
       <div class="chapter-dot" />
-      <span class="chapter-label font-body">{{ chapter.label }}</span>
+      <span class="chapter-label">{{ chapter.label }}</span>
     </div>
   </nav>
 </template>
@@ -18,48 +22,50 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const chapters = [
-  { id: 'rain', label: 'I' },
-  { id: 'city', label: 'II' },
-  { id: 'past', label: 'III' },
-  { id: 'code', label: 'IV' },
-  { id: 'night', label: 'V' },
-  { id: 'dawn', label: 'VI' },
+  { id: 'hero', label: 'I', selector: '.hero' },
+  { id: 'origin', label: 'II', selector: '#origin' },
+  { id: 'code', label: 'III', selector: '#code' },
+  { id: 'blade', label: 'IV', selector: '#blade' },
+  { id: 'battles', label: 'V', selector: '#battles' },
+  { id: 'road', label: 'VI', selector: '#road' },
 ]
 
-const activeChapter = ref('rain')
+const activeChapter = ref('hero')
+const isLightSection = ref(false)
 
-const sectionMap: Record<string, string> = {
-  rain: '.hero-rain',
-  city: '.the-city',
-  past: '.the-past',
-  code: '.the-code',
-  night: '.the-night',
-  dawn: '.dawn',
-}
+const lightSections = new Set(['origin', 'code', 'blade'])
+
+const triggers: ScrollTrigger[] = []
 
 function scrollToChapter(id: string) {
-  const selector = sectionMap[id]
-  if (!selector) return
-  const el = document.querySelector(selector)
+  const chapter = chapters.find(c => c.id === id)
+  if (!chapter) return
+  const el = document.querySelector(chapter.selector)
   if (el) {
     el.scrollIntoView({ behavior: 'smooth' })
   }
 }
 
 onMounted(() => {
-  // Create a ScrollTrigger per section to track active chapter
-  Object.entries(sectionMap).forEach(([id, selector]) => {
-    ScrollTrigger.create({
-      trigger: selector,
+  chapters.forEach((chapter) => {
+    const trigger = ScrollTrigger.create({
+      trigger: chapter.selector,
       start: 'top 50%',
       end: 'bottom 50%',
       onToggle: (self) => {
         if (self.isActive) {
-          activeChapter.value = id
+          activeChapter.value = chapter.id
+          isLightSection.value = lightSections.has(chapter.id)
         }
       },
     })
+    triggers.push(trigger)
   })
+})
+
+onUnmounted(() => {
+  triggers.forEach(t => t.kill())
+  triggers.length = 0
 })
 </script>
 
@@ -76,44 +82,35 @@ onMounted(() => {
   align-items: flex-end;
 }
 
-/* Ink wash chapter — invert colors */
-.chapter-nav--ink .chapter-dot {
-  border-color: var(--ink-gray);
-}
-
-.chapter-nav--ink .active .chapter-dot {
-  background: var(--ink-red);
-  border-color: var(--ink-red);
-  box-shadow: 0 0 8px rgba(139, 37, 0, 0.4);
-}
-
-.chapter-nav--ink .chapter-label {
-  color: var(--ink-gray);
-}
-
 .chapter-dot-group {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: none;
   padding: 0.25rem 0;
+  outline: none;
+}
+
+.chapter-dot-group:focus-visible .chapter-dot {
+  box-shadow: 0 0 0 3px var(--blood-red);
 }
 
 .chapter-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  border: 1px solid var(--smoke);
+  border: 1px solid rgba(242, 235, 224, 0.4);
   background: transparent;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
 .chapter-label {
+  font-family: 'Cormorant Garamond', serif;
   font-size: 0.625rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--smoke);
+  color: rgba(242, 235, 224, 0.5);
   opacity: 0;
   transform: translateX(5px);
   transition: all 0.3s ease;
@@ -129,16 +126,29 @@ onMounted(() => {
 
 /* Active state */
 .active .chapter-dot {
-  background: var(--neon-red);
-  border-color: var(--neon-red);
-  box-shadow: 0 0 8px rgba(255, 23, 68, 0.5);
+  background: var(--blood-red);
+  border-color: var(--blood-red);
+  box-shadow: 0 0 8px rgba(140, 26, 26, 0.5);
   transform: scale(1.3);
 }
 
 .active .chapter-label {
-  color: var(--ash);
   opacity: 0.6;
   transform: translateX(0);
+}
+
+/* Light section — invert dot colors */
+.chapter-nav--light .chapter-dot {
+  border-color: rgba(10, 10, 15, 0.15);
+}
+
+.chapter-nav--light .chapter-label {
+  color: rgba(10, 10, 15, 0.4);
+}
+
+.chapter-nav--light .active .chapter-dot {
+  background: var(--blood-red);
+  border-color: var(--blood-red);
 }
 
 @media (max-width: 768px) {

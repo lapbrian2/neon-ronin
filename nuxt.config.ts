@@ -4,12 +4,12 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   app: {
     head: {
-      title: '浪人 — A Scroll-Driven Experience',
+      title: '浪人 — Brian Lapinski | Creative Engineer',
       htmlAttrs: { lang: 'en' },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'A masterless blade in a city of electric ghosts. Scroll-driven experience built with Nuxt 4, GSAP, and Three.js.' },
+        { name: 'description', content: 'Brian Lapinski — Creative Engineer. Scroll-driven portfolio built with Nuxt, Three.js, GSAP, and Lenis. Immersive web experiences that tell stories through code.' },
         { name: 'theme-color', content: '#f2ebe0' },
       ],
       link: [

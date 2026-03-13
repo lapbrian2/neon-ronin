@@ -78,9 +78,6 @@ export function useThreeScene(container: Ref<HTMLElement | null>) {
     animationId = requestAnimationFrame(render)
   }
 
-  function addToScene(object: THREE.Object3D) {
-    scene?.add(object)
-  }
 
   function trackDisposable(obj: { dispose: () => void }) {
     disposables.push(obj)
@@ -137,7 +134,6 @@ export function useThreeScene(container: Ref<HTMLElement | null>) {
     camera: computed(() => camera),
     renderer: computed(() => renderer),
     proxy,
-    addToScene,
     trackDisposable,
     dispose,
   }

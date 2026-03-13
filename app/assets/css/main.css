@@ -17,31 +17,7 @@
   --blood-red: #8c1a1a;
   --accent: #c83030;
 
-  /* Legacy compat */
-  --void: #0a0a0f;
-  --night: #1a1a22;
-  --steel: #2a2a32;
-  --smoke: #3d3830;
-  --ash: #7a756e;
-  --light: #f2ebe0;
-  --neon-red: #c83030;
-  --neon-cyan: #c4a055;
-  --neon-amber: #c4a055;
-  --neon-violet: #8c1a1a;
-  --ink-black: #0a0a0f;
-  --ink-gray: #3d3830;
-  --ink-paper: #e8dfd0;
-  --ink-red: #8c1a1a;
-
-  --glow-red: 0 0 10px rgba(140, 26, 26, 0.3);
-  --glow-cyan: 0 0 10px rgba(196, 160, 85, 0.3);
-  --glow-amber: 0 0 10px rgba(196, 160, 85, 0.3);
-
-  --text-hero: clamp(4rem, 10vw, 10rem);
-  --text-chapter: clamp(2.5rem, 5vw, 5rem);
-  --text-heading: clamp(1.5rem, 3vw, 2.5rem);
   --text-body: clamp(1rem, 1.2vw, 1.25rem);
-  --text-caption: 0.875rem;
 }
 
 *, *::before, *::after {
@@ -112,7 +88,6 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 .nav-link {
-  color: inherit;
   color: var(--warm-gray);
   text-decoration: none;
   font-size: 11px;
@@ -126,12 +101,14 @@ html.lenis, html.lenis body { height: auto; }
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0; left: 0;
-  width: 0; height: 1px;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
   background: var(--blood-red);
-  transition: width 0.4s;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.nav-link:hover::after { width: 100%; }
+.nav-link:hover::after { transform: scaleX(1); }
 
 .section-title {
   font-family: 'Cormorant Garamond', serif;
@@ -176,17 +153,20 @@ html.lenis, html.lenis body { height: auto; }
 
 [data-cursor] { cursor: none; }
 
-.section::after, .section::before {
-  content: '';
-  position: absolute;
-  left: 0; right: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 5;
-}
-.section::after { bottom: -1px; }
-.section::before { top: -1px; }
+
 
 @media (max-width: 768px) {
   .chapter-num { font-size: 100px !important; right: -10px !important; }
+}
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .tech-marquee { animation: none !important; }
+  .maple-leaf { animation: none !important; opacity: 0.2 !important; }
 }

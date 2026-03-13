@@ -8,6 +8,8 @@
 <script setup lang="ts">
 import gsap from 'gsap'
 
+const { normalizedSpeed, direction } = useScrollVelocity()
+
 const dotRef = ref<HTMLElement | null>(null)
 const ringRef = ref<HTMLElement | null>(null)
 const visible = ref(false)
@@ -16,6 +18,7 @@ const sectionColor = ref('')
 
 let mouseX = 0
 let mouseY = 0
+let tickerCallback: (() => void) | null = null
 
 onMounted(() => {
   // Hide on mobile/touch
@@ -32,25 +35,37 @@ onMounted(() => {
     gsap.set(dotRef.value, { x: mouseX, y: mouseY })
   }
 
-  // Ring follows with smooth lerp via ticker
-  gsap.ticker.add(() => {
+  // Ring follows with smooth lerp + velocity stretch
+  tickerCallback = () => {
+    const speed = normalizedSpeed.value
+    const scaleY = 1 + speed * 0.5
+    const scaleX = 1 - speed * 0.12
+    const dir = direction.value
+    const skewY = dir === 'down' ? speed * 3 : dir === 'up' ? -speed * 3 : 0
+
     gsap.to(ringRef.value, {
       x: mouseX,
       y: mouseY,
+      scaleY,
+      scaleX,
+      skewY,
       duration: 0.15,
       ease: 'power2.out',
       overwrite: true,
     })
-  })
+  }
+  gsap.ticker.add(tickerCallback)
 
-  // Section-aware cursor color
+  // Section-aware cursor color — uses ACTUAL section classes from components
   const sectionColorMap: Record<string, string> = {
-    'hero-rain': 'cursor-section-red',
-    'the-city': 'cursor-section-cyan',
-    'the-past': 'cursor-section-ink',
-    'the-code': 'cursor-section-cyan',
-    'the-night': 'cursor-section-red',
-    'dawn': 'cursor-section-amber',
+    'hero': 'cursor-dark-bg',
+    'origin-section': 'cursor-light-bg',
+    'code-section': 'cursor-light-bg',
+    'blade-section': 'cursor-light-bg',
+    'interstitial': 'cursor-dark-bg',
+    'interstitial-blade': 'cursor-dark-bg',
+    'battles-section': 'cursor-dark-bg',
+    'road-section': 'cursor-dark-bg',
   }
 
   const sections = document.querySelectorAll('section')
@@ -98,6 +113,7 @@ onMounted(() => {
 
   onUnmounted(() => {
     observer.disconnect()
+    if (tickerCallback) gsap.ticker.remove(tickerCallback)
     document.body.style.cursor = ''
     window.removeEventListener('mousemove', onMouseMove)
     document.removeEventListener('mouseover', onMouseOver)
@@ -136,7 +152,7 @@ onMounted(() => {
   background: white;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
+  transition: width 0.2s, height 0.2s, background 0.3s;
 }
 
 .cursor-ring {
@@ -153,13 +169,13 @@ onMounted(() => {
 .cursor-active.cursor-dot {
   width: 8px;
   height: 8px;
-  background: var(--neon-red);
+  background: var(--blood-red);
 }
 
 .cursor-active.cursor-ring {
   width: 50px;
   height: 50px;
-  border-color: var(--neon-red);
+  border-color: var(--blood-red);
   opacity: 0.6;
 }
 
@@ -175,34 +191,20 @@ onMounted(() => {
   border-color: white;
 }
 
-
-/* Section-aware cursor colors */
-.cursor-section-red.cursor-ring {
-  border-color: rgba(255, 23, 68, 0.4);
+/* Dark background sections — cream/white cursor (default, handled by mix-blend-mode) */
+.cursor-dark-bg.cursor-ring {
+  border-color: rgba(255, 255, 255, 0.4);
 }
-.cursor-section-red.cursor-dot {
-  background: var(--neon-red);
-}
-
-.cursor-section-cyan.cursor-ring {
-  border-color: rgba(0, 229, 255, 0.4);
-}
-.cursor-section-cyan.cursor-dot {
-  background: var(--neon-cyan);
+.cursor-dark-bg.cursor-dot {
+  background: white;
 }
 
-.cursor-section-ink.cursor-ring {
-  border-color: rgba(26, 24, 20, 0.3);
+/* Light background sections — ink cursor */
+.cursor-light-bg.cursor-ring {
+  border-color: rgba(10, 10, 15, 0.2);
 }
-.cursor-section-ink.cursor-dot {
-  background: var(--ink-black, #1a1814);
-}
-
-.cursor-section-amber.cursor-ring {
-  border-color: rgba(255, 215, 64, 0.4);
-}
-.cursor-section-amber.cursor-dot {
-  background: var(--neon-amber);
+.cursor-light-bg.cursor-dot {
+  background: var(--ink);
 }
 
 @media (max-width: 768px) {

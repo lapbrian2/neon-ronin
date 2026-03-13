@@ -28,11 +28,6 @@ export function useScrollAnimation() {
     return tween
   }
 
-  function createFromTween(targets: gsap.TweenTarget, vars: gsap.TweenVars) {
-    const tween = gsap.from(targets, vars)
-    tweens.push(tween)
-    return tween
-  }
 
   /**
    * Per-character text reveal animation.
@@ -118,7 +113,6 @@ export function useScrollAnimation() {
     createTimeline,
     createTrigger,
     createTween,
-    createFromTween,
     splitTextReveal,
     gsap,
     ScrollTrigger,

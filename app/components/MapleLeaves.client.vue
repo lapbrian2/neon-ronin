@@ -32,13 +32,13 @@ const leaves = Array.from({ length: 12 }, (_, i) => ({
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 50;
+  z-index: 30;
   overflow: hidden;
 }
 
 .maple-leaf {
   position: absolute;
-  opacity: 0.7;
+  opacity: 0.4;
   animation: leafFall linear infinite;
 }
 </style>

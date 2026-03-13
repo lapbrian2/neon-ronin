@@ -16,7 +16,7 @@
     </ClientOnly>
 
     <!-- Calligraphy stroke background decorations -->
-    <div class="ink-strokes">
+    <div class="ink-strokes" aria-hidden="true">
       <svg v-for="stroke in inkStrokes" :key="stroke.id"
         viewBox="0 0 40 100"
         class="ink-stroke"
@@ -29,6 +29,26 @@
     <!-- Custom cursor -->
     <ClientOnly>
       <CursorFollow />
+    </ClientOnly>
+
+    <!-- Film grain overlay -->
+    <ClientOnly>
+      <FilmGrain />
+    </ClientOnly>
+
+    <!-- Chapter navigation dots -->
+    <ClientOnly>
+      <ChapterNav />
+    </ClientOnly>
+
+    <!-- Scroll progress bar -->
+    <ClientOnly>
+      <ScrollProgress />
+    </ClientOnly>
+
+    <!-- Ambient audio toggle -->
+    <ClientOnly>
+      <AudioToggle />
     </ClientOnly>
 
     <!-- Fixed nav -->
@@ -60,7 +80,21 @@
 
 <script setup lang="ts">
 useHead({
-  title: '浪人 — A Scroll-Driven Experience',
+  title: '浪人 — Brian Lapinski | Creative Engineer',
+  meta: [
+    { property: 'og:title', content: 'Brian Lapinski — Creative Engineer' },
+    { property: 'og:description', content: 'Scroll-driven portfolio built with Nuxt, GSAP, Three.js, and Lenis. The site is the portfolio piece.' },
+    { property: 'og:image', content: 'https://neon-ronin.vercel.app/images/ronin-battlefield.webp' },
+    { property: 'og:url', content: 'https://neon-ronin.vercel.app' },
+    { property: 'og:type', content: 'website' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Brian Lapinski — Creative Engineer' },
+    { name: 'twitter:description', content: 'Scroll-driven portfolio. The site IS the portfolio piece.' },
+    { name: 'twitter:image', content: 'https://neon-ronin.vercel.app/images/ronin-battlefield.webp' },
+  ],
+  link: [
+    { rel: 'canonical', href: 'https://neon-ronin.vercel.app' },
+  ],
 })
 
 const appReady = ref(false)
@@ -177,12 +211,6 @@ onMounted(() => {
   letter-spacing: 2px;
 }
 
-.nav-title {
-  font-size: 10px;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  color: var(--warm-gray);
-}
 
 .nav-right {
   display: flex;

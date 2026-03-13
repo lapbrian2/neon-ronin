@@ -6,26 +6,32 @@
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let animationId: number
 let ctx: CanvasRenderingContext2D | null = null
+let imageData: ImageData | null = null
 
 function resize() {
   if (!canvasRef.value) return
   canvasRef.value.width = window.innerWidth / 3
   canvasRef.value.height = window.innerHeight / 3
+  imageData = null // Force re-create on next frame after resize
 }
 
 function renderGrain() {
   if (!ctx || !canvasRef.value) return
   const w = canvasRef.value.width
   const h = canvasRef.value.height
-  const imageData = ctx.createImageData(w, h)
-  const data = imageData.data
 
+  // Reuse ImageData buffer — avoid allocation every frame
+  if (!imageData || imageData.width !== w || imageData.height !== h) {
+    imageData = ctx.createImageData(w, h)
+  }
+
+  const data = imageData.data
   for (let i = 0; i < data.length; i += 4) {
     const v = Math.random() * 255
     data[i] = v
     data[i + 1] = v
     data[i + 2] = v
-    data[i + 3] = 12 // very subtle alpha
+    data[i + 3] = 12
   }
 
   ctx.putImageData(imageData, 0, 0)
@@ -43,6 +49,7 @@ onMounted(() => {
 onUnmounted(() => {
   cancelAnimationFrame(animationId)
   window.removeEventListener('resize', resize)
+  imageData = null
 })
 </script>
 
@@ -52,9 +59,9 @@ onUnmounted(() => {
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 9998;
+  z-index: 44;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.2;
   mix-blend-mode: overlay;
   image-rendering: pixelated;
 }

@@ -30,7 +30,7 @@ const { isMuted, toggle } = useAmbientAudio()
   align-items: center;
   gap: 0.5rem;
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(242, 235, 224, 0.15);
   border-radius: 20px;
   padding: 0.4rem 0.75rem;
   cursor: none;
@@ -39,17 +39,17 @@ const { isMuted, toggle } = useAmbientAudio()
 }
 
 .audio-toggle:hover {
-  border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(242, 235, 224, 0.3);
+  background: rgba(242, 235, 224, 0.05);
 }
 
 .audio-toggle--active {
-  border-color: var(--neon-red);
+  border-color: var(--blood-red);
 }
 
 .audio-toggle--active:hover {
-  border-color: var(--neon-red);
-  background: rgba(255, 23, 68, 0.05);
+  border-color: var(--blood-red);
+  background: rgba(140, 26, 26, 0.08);
 }
 
 .audio-bars {
@@ -62,7 +62,7 @@ const { isMuted, toggle } = useAmbientAudio()
 .audio-bar {
   display: block;
   width: 2px;
-  background: var(--smoke);
+  background: var(--mist);
   border-radius: 1px;
   transition: background 0.3s ease;
 }
@@ -75,7 +75,7 @@ const { isMuted, toggle } = useAmbientAudio()
 
 /* Active state — animated bars */
 .audio-toggle--active .audio-bar {
-  background: var(--neon-red);
+  background: var(--blood-red);
   animation: audio-bounce 1s ease-in-out infinite;
 }
 
@@ -93,12 +93,12 @@ const { isMuted, toggle } = useAmbientAudio()
   font-size: 0.5625rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--smoke);
+  color: var(--mist);
   transition: color 0.3s ease;
 }
 
 .audio-toggle--active .audio-label {
-  color: var(--neon-red);
+  color: var(--blood-red);
 }
 
 @media (max-width: 768px) {

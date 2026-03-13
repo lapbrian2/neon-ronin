@@ -30,16 +30,30 @@ const { createTimeline, gsap } = useScrollAnimation()
 onMounted(() => {
   if (!sectionRef.value) return
 
+  // Clip-path reveal: image expands from center
+  gsap.set(imageRef.value, { clipPath: 'inset(12% 20% 12% 20%)' })
   gsap.set(contentRef.value, { opacity: 0, y: 30 })
 
+  // Image clip-path expands on scroll
   createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
-      start: 'top 70%',
+      start: 'top 85%',
+      end: 'top 30%',
+      scrub: 0.5,
+    },
+  }).to(imageRef.value, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none' })
+
+  // Content reveals after image opens
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top 50%',
       toggleActions: 'play none none none',
     },
   }).to(contentRef.value, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' })
 
+  // Parallax on image
   createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
@@ -62,6 +76,7 @@ onMounted(() => {
 
 .ib-image {
   position: absolute; inset: 0;
+  will-change: clip-path;
 }
 .ib-img {
   width: 100%; height: 120%; object-fit: cover;
@@ -106,7 +121,29 @@ onMounted(() => {
   margin-top: 8px;
 }
 
+/* Seamless transition bleeds */
+.interstitial-blade::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--cream), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.interstitial-blade::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to top, var(--ink), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
 @media (max-width: 768px) {
   .interstitial-blade { height: 40vh; min-height: 280px; }
+  .interstitial-blade::before, .interstitial-blade::after { height: 50px; }
 }
 </style>

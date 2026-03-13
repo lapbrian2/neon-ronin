@@ -138,6 +138,7 @@ onMounted(() => {
   background: rgba(10, 10, 15, 0.06);
   transform: translateY(-4px);
   box-shadow: 0 8px 30px rgba(10, 10, 15, 0.06);
+  border-left-color: var(--gold);
 }
 
 .card-accent {

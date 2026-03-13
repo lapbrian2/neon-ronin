@@ -65,6 +65,7 @@ onMounted(() => {
     })
   }
 
+  // Subtitle reveals on enter
   const tl = createTimeline({
     scrollTrigger: {
       trigger: sectionRef.value,
@@ -72,7 +73,6 @@ onMounted(() => {
       toggleActions: 'play none none none',
     },
   })
-
   tl.to(subtitleEl, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
 
   // Character-level title reveal
@@ -80,12 +80,22 @@ onMounted(() => {
     splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
   }
 
+  // Skill rows scrub in progressively as you scroll through
   if (rows) {
-    tl.to(rows, {
-      opacity: 1, x: 0, rotateY: 0,
-      duration: 0.8, stagger: 0.15,
-      ease: 'power3.out',
-    }, '-=0.4')
+    const scrubTl = createTimeline({
+      scrollTrigger: {
+        trigger: skillsRef.value,
+        start: 'top 80%',
+        end: 'bottom 60%',
+        scrub: 0.5,
+      },
+    })
+    rows.forEach((row: Element, i: number) => {
+      scrubTl.to(row, {
+        opacity: 1, x: 0, rotateY: 0,
+        duration: 1, ease: 'power2.out',
+      }, i * 0.3)
+    })
   }
 })
 </script>

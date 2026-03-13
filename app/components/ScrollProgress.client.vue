@@ -7,11 +7,12 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const barRef = ref<HTMLElement | null>(null)
+let trigger: ScrollTrigger | null = null
 
 onMounted(() => {
   if (!barRef.value) return
 
-  gsap.to(barRef.value, {
+  const tween = gsap.to(barRef.value, {
     scaleX: 1,
     ease: 'none',
     scrollTrigger: {
@@ -21,12 +22,12 @@ onMounted(() => {
       scrub: 0.3,
     },
   })
+
+  trigger = tween.scrollTrigger || null
 })
 
 onUnmounted(() => {
-  ScrollTrigger.getAll().forEach(t => {
-    if (t.trigger === document.body) t.kill()
-  })
+  if (trigger) trigger.kill()
 })
 </script>
 
@@ -37,11 +38,11 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(to right, var(--neon-red), var(--neon-violet), var(--neon-cyan));
+  background: var(--blood-red);
   transform: scaleX(0);
   transform-origin: left;
   z-index: 10000;
   pointer-events: none;
-  mix-blend-mode: screen;
+  mix-blend-mode: difference;
 }
 </style>
