@@ -4,9 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default defineNuxtPlugin(() => {
   const lenis = new Lenis({
-    lerp: 0.07,
-    duration: 1.2,
+    lerp: 0.06,
+    duration: 1.4,
     smoothWheel: true,
+    wheelMultiplier: 0.8,
   })
 
   // Connect Lenis → GSAP ScrollTrigger (the golden chain)

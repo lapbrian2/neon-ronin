@@ -1,5 +1,9 @@
 <template>
-  <div class="ronin-app">
+  <div>
+    <!-- Preloader -->
+    <Preloader @done="onPreloaderDone" />
+
+    <div class="ronin-app" :class="{ 'app-ready': appReady }">
     <!-- Paper grain overlay -->
     <div class="grain-overlay" />
 
@@ -50,6 +54,7 @@
       <SectionsTheNight />
       <SectionsDawn />
     </main>
+    </div>
   </div>
 </template>
 
@@ -57,6 +62,12 @@
 useHead({
   title: '浪人 — A Scroll-Driven Experience',
 })
+
+const appReady = ref(false)
+
+const onPreloaderDone = () => {
+  appReady.value = true
+}
 
 const isScrolled = ref(false)
 
@@ -176,6 +187,15 @@ onMounted(() => {
 .nav-right {
   display: flex;
   gap: 32px;
+}
+
+.ronin-app {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.ronin-app.app-ready {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {

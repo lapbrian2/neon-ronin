@@ -8,9 +8,8 @@
 
       <div ref="headerRef" class="origin-header">
         <div class="section-subtitle">CHAPTER II — BEFORE THE ROAD</div>
-        <h2 class="section-title">
-          Every wanderer was once<br />
-          <em>rooted somewhere.</em>
+        <h2 ref="titleRef" class="section-title">
+          Every wanderer was once rooted somewhere.
         </h2>
       </div>
 
@@ -66,17 +65,20 @@
 <script setup lang="ts">
 const sectionRef = ref<HTMLElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
+const titleRef = ref<HTMLElement | null>(null)
 const textRef = ref<HTMLElement | null>(null)
 const cardDoRef = ref<HTMLElement | null>(null)
 const cardKataRef = ref<HTMLElement | null>(null)
 
-const { createTimeline, gsap } = useScrollAnimation()
+const { createTimeline, gsap, splitTextReveal } = useScrollAnimation()
 
 onMounted(() => {
   if (!sectionRef.value) return
 
   // Header slides up
-  gsap.set(headerRef.value, { opacity: 0, y: 60 })
+  // Subtitle gets fade-up, title gets character reveal
+  const subtitleEl = headerRef.value?.querySelector('.section-subtitle')
+  if (subtitleEl) gsap.set(subtitleEl, { opacity: 0, y: 30 })
   // Text fades in
   gsap.set(textRef.value, { opacity: 0, y: 30 })
   // Cards slide from opposite sides with rotation
@@ -90,10 +92,15 @@ onMounted(() => {
       toggleActions: 'play none none none',
     },
   })
-    .to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+    .to(subtitleEl, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
     .to(textRef.value, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.5')
     .to(cardDoRef.value, { opacity: 1, x: 0, rotation: 0, duration: 0.9, ease: 'power3.out' }, '-=0.4')
     .to(cardKataRef.value, { opacity: 1, x: 0, rotation: 0, duration: 0.9, ease: 'power3.out' }, '-=0.6')
+
+  // Character-level title reveal
+  if (titleRef.value) {
+    splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
+  }
 })
 </script>
 

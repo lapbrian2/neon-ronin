@@ -5,9 +5,8 @@
 
       <div ref="headerRef" class="battles-header">
         <div class="section-subtitle">CHAPTER V — BATTLES WON</div>
-        <h2 class="section-title">
-          The clearing after<br />
-          <em>the storm.</em>
+        <h2 ref="titleRef" class="section-title">
+          The clearing after the storm.
         </h2>
       </div>
 
@@ -37,9 +36,10 @@
 <script setup lang="ts">
 const sectionRef = ref<HTMLElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
+const titleRef = ref<HTMLElement | null>(null)
 const battlesRef = ref<HTMLElement | null>(null)
 
-const { createTimeline, gsap } = useScrollAnimation()
+const { createTimeline, gsap, splitTextReveal } = useScrollAnimation()
 
 const battles = [
   {
@@ -63,9 +63,15 @@ const battles = [
 onMounted(() => {
   if (!sectionRef.value) return
 
-  gsap.set(headerRef.value, { opacity: 0, y: 60 })
+  const subtitleEl = headerRef.value?.querySelector('.section-subtitle')
+  if (subtitleEl) gsap.set(subtitleEl, { opacity: 0, y: 30 })
 
   const blocks = battlesRef.value?.querySelectorAll('.battle-block')
+  // Character-level title reveal
+  if (titleRef.value) {
+    splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
+  }
+
   if (blocks) {
     blocks.forEach((block, i) => {
       const xDir = i % 2 === 0 ? -60 : 60
@@ -81,7 +87,7 @@ onMounted(() => {
     },
   })
 
-  tl.to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+  tl.to(subtitleEl, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
 
   if (blocks) {
     blocks.forEach((block, i) => {

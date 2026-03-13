@@ -8,9 +8,8 @@
 
       <div ref="headerRef" class="blade-header">
         <div class="section-subtitle">CHAPTER IV — THE BLADE</div>
-        <h2 class="section-title">
-          The instrument and<br />
-          <em>the hand are one.</em>
+        <h2 ref="titleRef" class="section-title">
+          The instrument and the hand are one.
         </h2>
       </div>
 
@@ -42,9 +41,10 @@
 <script setup lang="ts">
 const sectionRef = ref<HTMLElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
+const titleRef = ref<HTMLElement | null>(null)
 const skillsRef = ref<HTMLElement | null>(null)
 
-const { createTimeline, gsap } = useScrollAnimation()
+const { createTimeline, gsap, splitTextReveal } = useScrollAnimation()
 
 const skills = [
   { name: 'Creative Engineering', desc: 'Where aesthetic instinct meets systematic execution. Building at the intersection of art direction and architecture.', kanji: '壱' },
@@ -56,7 +56,8 @@ const skills = [
 onMounted(() => {
   if (!sectionRef.value) return
 
-  gsap.set(headerRef.value, { opacity: 0, y: 60 })
+  const subtitleEl = headerRef.value?.querySelector('.section-subtitle')
+  if (subtitleEl) gsap.set(subtitleEl, { opacity: 0, y: 30 })
   const rows = skillsRef.value?.querySelectorAll('.skill-row')
   if (rows) {
     rows.forEach((row: Element, i: number) => {
@@ -72,7 +73,12 @@ onMounted(() => {
     },
   })
 
-  tl.to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+  tl.to(subtitleEl, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
+
+  // Character-level title reveal
+  if (titleRef.value) {
+    splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
+  }
 
   if (rows) {
     tl.to(rows, {

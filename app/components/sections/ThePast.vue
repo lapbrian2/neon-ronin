@@ -5,9 +5,8 @@
 
       <div ref="headerRef" class="code-header">
         <div class="section-subtitle">CHAPTER III — THE CODE</div>
-        <h2 class="section-title">
-          Principles carved into<br />
-          <em>muscle memory.</em>
+        <h2 ref="titleRef" class="section-title">
+          Principles carved into muscle memory.
         </h2>
       </div>
 
@@ -51,9 +50,10 @@
 <script setup lang="ts">
 const sectionRef = ref<HTMLElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
+const titleRef = ref<HTMLElement | null>(null)
 const principlesRef = ref<HTMLElement | null>(null)
 
-const { createTimeline, gsap } = useScrollAnimation()
+const { createTimeline, gsap, splitTextReveal } = useScrollAnimation()
 
 const principles = [
   {
@@ -82,7 +82,8 @@ const marqueeItems = [
 onMounted(() => {
   if (!sectionRef.value) return
 
-  gsap.set(headerRef.value, { opacity: 0, y: 60 })
+  const subtitleEl = headerRef.value?.querySelector('.section-subtitle')
+  if (subtitleEl) gsap.set(subtitleEl, { opacity: 0, y: 30 })
 
   const lineEls = principlesRef.value?.querySelectorAll('.principle-line')
   const kanjiEls = principlesRef.value?.querySelectorAll('.principle-kanji')
@@ -102,7 +103,7 @@ onMounted(() => {
     },
   })
 
-  tl.to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
+  tl.to(subtitleEl, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' })
 
   if (lineEls && kanjiEls && titleEls && textEls) {
     for (let i = 0; i < lineEls.length; i++) {
@@ -112,6 +113,11 @@ onMounted(() => {
       tl.to(titleEls[i], { opacity: 1, x: 0, duration: 0.4, ease: 'power2.out' }, '-=0.2')
       tl.to(textEls[i], { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '-=0.2')
     }
+  }
+
+  // Character-level title reveal
+  if (titleRef.value) {
+    splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
   }
 })
 </script>
