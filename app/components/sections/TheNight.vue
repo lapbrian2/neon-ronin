@@ -12,8 +12,8 @@
       </div>
 
       <div ref="projectsRef" class="projects-grid">
-        <div v-for="(project, i) in projects" :key="i" class="ink-card project-card"
-          :style="{ borderLeftColor: i === 0 ? 'var(--blood-red)' : 'rgba(10,10,15,0.08)' }">
+        <div v-for="(project, i) in projects" :key="i" class="project-card"
+          :style="{ borderLeftColor: i === 0 ? 'var(--blood-red)' : 'rgba(242,235,224,0.08)' }">
           <div class="project-type">{{ project.type }}</div>
           <h3 class="project-name">{{ project.title }}</h3>
           <p class="project-desc">{{ project.desc }}</p>
@@ -21,11 +21,11 @@
       </div>
     </div>
 
-    <!-- Ink divider -->
+    <!-- Ink divider (inverted) -->
     <div class="ink-divider-wrap">
       <svg width="300" height="12" viewBox="0 0 300 12">
         <path d="M0,6 Q30,2 60,6 Q90,10 120,5 Q150,1 180,7 Q210,11 240,5 Q270,2 300,6"
-          stroke="var(--ink)" stroke-width="1.5" fill="none" opacity="0.25" stroke-linecap="round" />
+          stroke="var(--cream)" stroke-width="1.5" fill="none" opacity="0.15" stroke-linecap="round" />
         <circle cx="150" cy="6" r="3" fill="var(--blood-red)" opacity="0.6" />
       </svg>
     </div>
@@ -68,7 +68,7 @@ onMounted(() => {
   gsap.set(headerRef.value, { opacity: 0, y: 60 })
   const cards = projectsRef.value?.querySelectorAll('.project-card')
   if (cards) {
-    cards.forEach((card: Element, i: number) => {
+    cards.forEach((card, i) => {
       const rotX = (i % 2 === 0) ? 8 : -8
       const rotY = (i < 2) ? -5 : 5
       gsap.set(card, { opacity: 0, y: 50, rotateX: rotX, rotateY: rotY, scale: 0.95 })
@@ -99,7 +99,8 @@ onMounted(() => {
 .battles-section {
   padding: 120px 0;
   position: relative;
-  background: var(--cream);
+  background: var(--ink);
+  color: var(--cream);
 }
 
 .section-inner {
@@ -107,6 +108,19 @@ onMounted(() => {
   margin: 0 auto;
   padding: 0 48px;
   position: relative;
+}
+
+/* Override global chapter-num for dark bg */
+.chapter-num {
+  -webkit-text-stroke-color: rgba(242, 235, 224, 0.04) !important;
+}
+
+.section-subtitle {
+  color: var(--gold) !important;
+}
+
+.section-title {
+  color: var(--cream) !important;
 }
 
 .projects-grid {
@@ -120,11 +134,15 @@ onMounted(() => {
 .project-card {
   cursor: default;
   transform-style: preserve-3d;
+  padding: 32px;
+  border-left: 3px solid rgba(242, 235, 224, 0.08);
+  background: rgba(242, 235, 224, 0.03);
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-left-color 0.4s, background 0.4s;
 }
 .project-card:hover {
   transform: translateY(-4px) rotateX(-2deg) rotateY(2deg);
   border-left-color: var(--blood-red) !important;
+  background: rgba(242, 235, 224, 0.05);
 }
 
 .project-type {
@@ -140,12 +158,13 @@ onMounted(() => {
   font-weight: 600;
   font-size: 22px;
   margin-bottom: 10px;
+  color: var(--cream);
 }
 
 .project-desc {
   font-size: 13px;
   line-height: 1.8;
-  color: var(--warm-gray);
+  color: var(--mist);
   font-weight: 300;
 }
 
@@ -158,7 +177,7 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .projects-grid {
-  perspective: 1000px;
+    perspective: 1000px;
     grid-template-columns: 1fr;
   }
   .section-inner {

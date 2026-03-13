@@ -112,6 +112,7 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 .nav-link {
+  color: inherit;
   color: var(--warm-gray);
   text-decoration: none;
   font-size: 11px;

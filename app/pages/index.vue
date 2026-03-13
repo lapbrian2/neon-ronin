@@ -44,6 +44,7 @@
       <SectionsHeroRain />
       <SectionsTheCity />
       <SectionsThePast />
+      <SectionsInterstitial />
       <SectionsTheCode />
       <SectionsTheNight />
       <SectionsDawn />
@@ -141,12 +142,14 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 24px 48px;
-  transition: background 0.6s, backdrop-filter 0.6s;
+  color: var(--cream);
+  transition: background 0.6s, backdrop-filter 0.6s, color 0.6s;
 }
 
 .site-nav.scrolled {
-  background: rgba(242, 235, 224, 0.85);
+  background: rgba(242, 235, 224, 0.9);
   backdrop-filter: blur(12px);
+  color: var(--ink);
 }
 
 .nav-left {
