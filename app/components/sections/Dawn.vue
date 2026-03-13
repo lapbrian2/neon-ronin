@@ -3,7 +3,7 @@
     <!-- Atmospheric image backdrop -->
     <div ref="dawnImageRef" class="dawn-image-wrap">
       <img
-        src="/images/ronin-departure.webp"
+        src="/images/ronin-bamboo.webp"
         alt=""
         class="dawn-image"
         loading="lazy"
@@ -126,15 +126,16 @@ onMounted(() => {
 }
 .dawn-image {
   width: 100%; height: 100%; object-fit: cover;
+  object-position: center 35%;
   will-change: transform;
 }
 .dawn-image-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(10, 10, 15, 0.7) 0%,
-    rgba(10, 10, 15, 0.5) 50%,
-    rgba(10, 10, 15, 0.8) 100%
+    rgba(10, 10, 15, 0.6) 0%,
+    rgba(10, 10, 15, 0.45) 50%,
+    rgba(10, 10, 15, 0.75) 100%
   );
 }
 

@@ -11,12 +11,14 @@
         </h2>
       </div>
 
-      <div ref="projectsRef" class="projects-grid">
-        <div v-for="(project, i) in projects" :key="i" class="project-card"
-          :style="{ borderLeftColor: i === 0 ? 'var(--blood-red)' : 'rgba(242,235,224,0.08)' }">
-          <div class="project-type">{{ project.type }}</div>
-          <h3 class="project-name">{{ project.title }}</h3>
-          <p class="project-desc">{{ project.desc }}</p>
+      <div ref="battlesRef" class="battles-list">
+        <div v-for="(battle, i) in battles" :key="i" class="battle-block"
+          :class="{ 'battle-right': i % 2 !== 0 }">
+          <div class="battle-index">{{ String(i + 1).padStart(2, '0') }}</div>
+          <p class="battle-statement">{{ battle.statement }}</p>
+          <div class="battle-tech">
+            <span v-for="(tag, j) in battle.tech" :key="j" class="tech-tag">{{ tag }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -35,30 +37,26 @@
 <script setup lang="ts">
 const sectionRef = ref<HTMLElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
-const projectsRef = ref<HTMLElement | null>(null)
+const battlesRef = ref<HTMLElement | null>(null)
 
 const { createTimeline, gsap } = useScrollAnimation()
 
-const projects = [
+const battles = [
   {
-    title: 'The Vernissage',
-    type: 'Immersive 3D Gallery',
-    desc: 'A virtual exhibition space built in Three.js where art breathes and walls dissolve as you scroll through the collection.',
+    statement: 'Built virtual galleries where art breathes and walls dissolve as the viewer scrolls through space.',
+    tech: ['Three.js', 'WebGL', 'GSAP ScrollTrigger'],
   },
   {
-    title: 'Murmuration Engine',
-    type: 'Generative Art System',
-    desc: 'Particle simulations driven by emergent behavior algorithms. Thousands of autonomous agents flocking, scattering, and self-organizing into living digital art.',
+    statement: 'Engineered particle simulations where thousands of autonomous agents flock, scatter, and self-organize into living digital art.',
+    tech: ['Canvas 2D', 'Emergent Algorithms', 'Real-time Rendering'],
   },
   {
-    title: 'Research Radar',
-    type: 'AI Research Intelligence',
-    desc: 'An autonomous sweep engine that discovers frontier AI practices, emerging architectures, and breakthrough papers — then surfaces what matters to a personal knowledge base.',
+    statement: 'Trained autonomous agents to sweep the frontier — discovering breakthrough papers, emerging architectures, and practices that matter.',
+    tech: ['Node.js', 'Notion API', 'LLM Pipelines'],
   },
   {
-    title: 'Lonely Hollow',
-    type: 'Immersive Web World',
-    desc: 'An atmospheric 3D web experience where environment tells the story. Scroll-driven narrative through a haunted landscape.',
+    statement: 'Crafted scroll-driven narratives where environment tells the story. The user moves through atmosphere, not past content.',
+    tech: ['Nuxt', 'Lenis', 'GSAP', 'CSS Architecture'],
   },
 ]
 
@@ -66,12 +64,12 @@ onMounted(() => {
   if (!sectionRef.value) return
 
   gsap.set(headerRef.value, { opacity: 0, y: 60 })
-  const cards = projectsRef.value?.querySelectorAll('.project-card')
-  if (cards) {
-    cards.forEach((card, i) => {
-      const rotX = (i % 2 === 0) ? 8 : -8
-      const rotY = (i < 2) ? -5 : 5
-      gsap.set(card, { opacity: 0, y: 50, rotateX: rotX, rotateY: rotY, scale: 0.95 })
+
+  const blocks = battlesRef.value?.querySelectorAll('.battle-block')
+  if (blocks) {
+    blocks.forEach((block, i) => {
+      const xDir = i % 2 === 0 ? -60 : 60
+      gsap.set(block, { opacity: 0, x: xDir, y: 30 })
     })
   }
 
@@ -85,12 +83,13 @@ onMounted(() => {
 
   tl.to(headerRef.value, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
 
-  if (cards) {
-    tl.to(cards, {
-      opacity: 1, y: 0, rotateX: 0, rotateY: 0, scale: 1,
-      duration: 0.9, stagger: 0.12,
-      ease: 'power3.out',
-    }, '-=0.4')
+  if (blocks) {
+    blocks.forEach((block, i) => {
+      tl.to(block, {
+        opacity: 1, x: 0, y: 0,
+        duration: 1, ease: 'power3.out',
+      }, i === 0 ? '-=0.3' : '-=0.5')
+    })
   }
 })
 </script>
@@ -123,49 +122,69 @@ onMounted(() => {
   color: var(--cream) !important;
 }
 
-.projects-grid {
-  perspective: 1000px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  margin-top: 60px;
+.battles-list {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
 }
 
-.project-card {
-  cursor: default;
-  transform-style: preserve-3d;
-  padding: 32px;
-  border-left: 3px solid rgba(242, 235, 224, 0.08);
-  background: rgba(242, 235, 224, 0.03);
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-left-color 0.4s, background 0.4s;
-}
-.project-card:hover {
-  transform: translateY(-4px) rotateX(-2deg) rotateY(2deg);
-  border-left-color: var(--blood-red) !important;
-  background: rgba(242, 235, 224, 0.05);
+.battle-block {
+  max-width: 680px;
+  position: relative;
+  padding-left: 48px;
 }
 
-.project-type {
-  font-size: 10px;
+.battle-block.battle-right {
+  align-self: flex-end;
+  text-align: right;
+  padding-left: 0;
+  padding-right: 48px;
+}
+
+.battle-index {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 11px;
   letter-spacing: 4px;
-  text-transform: uppercase;
   color: var(--blood-red);
-  margin-bottom: 12px;
-}
-
-.project-name {
-  font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  font-size: 22px;
-  margin-bottom: 10px;
-  color: var(--cream);
 }
 
-.project-desc {
-  font-size: 13px;
-  line-height: 1.8;
-  color: var(--mist);
+.battle-right .battle-index {
+  left: auto;
+  right: 0;
+}
+
+.battle-statement {
+  font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
+  font-size: clamp(20px, 2.5vw, 28px);
+  line-height: 1.6;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+}
+
+.battle-tech {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.battle-right .battle-tech {
+  justify-content: flex-end;
+}
+
+.tech-tag {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mist);
+  opacity: 0.5;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(242, 235, 224, 0.08);
 }
 
 .ink-divider-wrap {
@@ -176,9 +195,21 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .projects-grid {
-    perspective: 1000px;
-    grid-template-columns: 1fr;
+  .battles-list { gap: 48px; }
+  .battle-block,
+  .battle-block.battle-right {
+    max-width: 100%;
+    padding-left: 36px;
+    padding-right: 0;
+    text-align: left;
+    align-self: flex-start;
+  }
+  .battle-right .battle-index {
+    left: 0;
+    right: auto;
+  }
+  .battle-right .battle-tech {
+    justify-content: flex-start;
   }
   .section-inner {
     padding: 0 24px;

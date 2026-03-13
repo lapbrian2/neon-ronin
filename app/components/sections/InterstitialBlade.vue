@@ -1,21 +1,21 @@
 <template>
-  <section ref="sectionRef" class="interstitial">
-    <div ref="imageRef" class="interstitial-image">
+  <section ref="sectionRef" class="interstitial-blade">
+    <div ref="imageRef" class="ib-image">
       <img
-        src="/images/ronin-bridge.webp"
+        src="/images/ronin-departure.webp"
         alt=""
-        class="interstitial-img"
+        class="ib-img"
         loading="lazy"
       />
-      <div class="interstitial-overlay" />
+      <div class="ib-overlay" />
     </div>
-    <div ref="contentRef" class="interstitial-content">
-      <div class="interstitial-line" />
-      <p class="interstitial-quote">
-        The blade remembers<br />
-        what the hand forgets.
+    <div ref="contentRef" class="ib-content">
+      <div class="ib-line" />
+      <p class="ib-quote">
+        Steel is patient.<br />
+        The edge comes from repetition.
       </p>
-      <div class="interstitial-kanji">剣</div>
+      <div class="ib-kanji">鍛</div>
     </div>
   </section>
 </template>
@@ -45,12 +45,12 @@ onMounted(() => {
       trigger: sectionRef.value,
       start: 'top bottom', end: 'bottom top', scrub: 1,
     },
-  }).to(imageRef.value?.querySelector('.interstitial-img') || {}, { y: 60, ease: 'none' })
+  }).to(imageRef.value?.querySelector('.ib-img') || {}, { y: 60, ease: 'none' })
 })
 </script>
 
 <style scoped>
-.interstitial {
+.interstitial-blade {
   position: relative;
   height: 50vh;
   min-height: 360px;
@@ -60,20 +60,20 @@ onMounted(() => {
   justify-content: center;
 }
 
-.interstitial-image {
+.ib-image {
   position: absolute; inset: 0;
 }
-.interstitial-img {
+.ib-img {
   width: 100%; height: 120%; object-fit: cover;
-  object-position: center 40%;
+  object-position: center 30%;
   will-change: transform;
 }
-.interstitial-overlay {
+.ib-overlay {
   position: absolute; inset: 0;
-  background: rgba(10, 10, 15, 0.55);
+  background: rgba(10, 10, 15, 0.7);
 }
 
-.interstitial-content {
+.ib-content {
   position: relative; z-index: 1;
   text-align: center;
   display: flex;
@@ -82,12 +82,12 @@ onMounted(() => {
   gap: 24px;
 }
 
-.interstitial-line {
+.ib-line {
   width: 40px; height: 2px;
-  background: var(--blood-red);
+  background: var(--gold);
 }
 
-.interstitial-quote {
+.ib-quote {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
   font-style: italic;
@@ -97,7 +97,7 @@ onMounted(() => {
   letter-spacing: 0.03em;
 }
 
-.interstitial-kanji {
+.ib-kanji {
   font-family: 'Noto Serif JP', serif;
   font-weight: 200;
   font-size: 48px;
@@ -107,6 +107,6 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .interstitial { height: 40vh; min-height: 280px; }
+  .interstitial-blade { height: 40vh; min-height: 280px; }
 }
 </style>

@@ -46,6 +46,7 @@
       <SectionsThePast />
       <SectionsInterstitial />
       <SectionsTheCode />
+      <SectionsInterstitialBlade />
       <SectionsTheNight />
       <SectionsDawn />
     </main>

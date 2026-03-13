@@ -1,5 +1,8 @@
 <template>
   <section id="origin" ref="sectionRef" class="origin-section">
+    <!-- Subtle atmospheric wash -->
+    <div class="origin-wash" />
+
     <div class="section-inner">
       <div class="chapter-num">二</div>
 
@@ -16,7 +19,7 @@
           <p class="body-text">
             The blade was not always masterless. Before the open road,
             there was discipline — the dojo floor worn smooth by ten
-            thousand repetitions, the master’s eye catching every
+            thousand repetitions, the master's eye catching every
             imperfection invisible to others.
           </p>
           <p class="body-text" style="margin-top: 24px;">
@@ -27,7 +30,8 @@
         </div>
 
         <div class="origin-cards">
-          <div ref="cardDoRef" class="ink-card card-slide-left">
+          <div ref="cardDoRef" class="ink-card card-do">
+            <div class="card-accent" />
             <div class="card-kanji">道</div>
             <p class="card-text">
               <em>Dō</em> — The Way. Not a destination but a practice.
@@ -36,7 +40,8 @@
               demands it.
             </p>
           </div>
-          <div ref="cardKataRef" class="ink-card card-slide-right">
+          <div ref="cardKataRef" class="ink-card card-kata">
+            <div class="card-accent" />
             <div class="card-kanji">型</div>
             <p class="card-text">
               <em>Kata</em> — The Form. Process forged through repetition
@@ -93,18 +98,73 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.origin-section { padding: 120px 0; position: relative; background: var(--cream); }
+.origin-section {
+  padding: 120px 0;
+  position: relative;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+/* Atmospheric wash for depth */
+.origin-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 40% at 15% 30%, rgba(10, 10, 15, 0.025) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 90% 70%, rgba(196, 160, 85, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
 .section-inner { max-width: 1100px; margin: 0 auto; padding: 0 48px; position: relative; }
 .origin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 60px; }
-.card-kanji {
-  font-family: 'Noto Serif JP', serif; font-size: 28px;
-  margin-bottom: 12px; font-weight: 200;
+
+.ink-card {
+  background: rgba(10, 10, 15, 0.03);
+  border-left: 2px solid var(--blood-red);
+  padding: 32px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s, transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s;
 }
+
+.ink-card:hover {
+  background: rgba(10, 10, 15, 0.06);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(10, 10, 15, 0.06);
+}
+
+.card-accent {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--blood-red), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.ink-card:hover .card-accent {
+  opacity: 0.6;
+}
+
+.card-kanji {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 32px;
+  margin-bottom: 12px;
+  font-weight: 200;
+  transition: color 0.4s;
+}
+
+.ink-card:hover .card-kanji {
+  color: var(--blood-red);
+}
+
 .card-text { font-size: 13px; line-height: 1.8; color: var(--warm-gray); }
 .origin-cards { display: flex; flex-direction: column; gap: 20px; }
 .ink-divider-wrap { width: 100%; display: flex; justify-content: center; padding: 60px 0; }
+
 @media (max-width: 768px) {
   .origin-grid { grid-template-columns: 1fr; gap: 40px; }
   .section-inner { padding: 0 24px; }
+  .ink-card { padding: 24px 28px; }
 }
 </style>

@@ -21,6 +21,22 @@
       </div>
     </div>
 
+    <!-- Tech marquee -->
+    <div class="tech-marquee-wrap">
+      <div class="tech-marquee">
+        <div class="tech-marquee-track">
+          <span v-for="(tech, i) in marqueeItems" :key="i" class="marquee-item">
+            {{ tech }} <span class="marquee-dot">·</span>
+          </span>
+        </div>
+        <div class="tech-marquee-track" aria-hidden="true">
+          <span v-for="(tech, i) in marqueeItems" :key="'d'+i" class="marquee-item">
+            {{ tech }} <span class="marquee-dot">·</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
     <!-- Ink divider -->
     <div class="ink-divider-wrap">
       <svg width="300" height="12" viewBox="0 0 300 12">
@@ -55,6 +71,12 @@ const principles = [
     title: 'MA — Negative Space',
     text: 'The space between elements carries meaning. Restraint is not absence — it is the silence that makes the note resonate.',
   },
+]
+
+const marqueeItems = [
+  'Three.js', 'GSAP', 'Nuxt', 'Vue', 'Lenis', 'WebGL',
+  'Node.js', 'Canvas 2D', 'CSS Architecture', 'ScrollTrigger',
+  'Tailwind', 'TypeScript', 'Vercel', 'Python',
 ]
 
 onMounted(() => {
@@ -96,7 +118,7 @@ onMounted(() => {
 
 <style scoped>
 .code-section {
-  padding: 120px 0;
+  padding: 120px 0 0;
   position: relative;
   background: var(--cream);
 }
@@ -142,6 +164,58 @@ onMounted(() => {
   line-height: 1.8;
   color: var(--warm-gray);
   font-weight: 300;
+}
+
+/* Tech Marquee */
+.tech-marquee-wrap {
+  margin-top: 80px;
+  padding: 24px 0;
+  border-top: 1px solid rgba(10, 10, 15, 0.06);
+  border-bottom: 1px solid rgba(10, 10, 15, 0.06);
+  overflow: hidden;
+}
+
+.tech-marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 30s linear infinite;
+}
+
+.tech-marquee:hover {
+  animation-play-state: paused;
+}
+
+.tech-marquee-track {
+  display: flex;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.marquee-item {
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--warm-gray);
+  white-space: nowrap;
+  padding: 0 16px;
+  opacity: 0.6;
+  transition: opacity 0.3s, color 0.3s;
+}
+
+.marquee-item:hover {
+  opacity: 1;
+  color: var(--blood-red);
+}
+
+.marquee-dot {
+  color: var(--blood-red);
+  opacity: 0.4;
+  margin-left: 16px;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .ink-divider-wrap {
