@@ -46,15 +46,41 @@ export function useScrollAnimation() {
     el.innerHTML = ''
     el.setAttribute('aria-label', text)
 
-    const chars = text.split('').map((char) => {
-      const span = document.createElement('span')
-      span.textContent = char === ' ' ? '\u00A0' : char
-      span.style.display = 'inline-block'
-      span.style.opacity = '0'
-      span.style.transform = 'translateY(40px)'
-      span.setAttribute('aria-hidden', 'true')
-      el.appendChild(span)
-      return span
+    // Split by words to preserve natural line breaks
+    const words = text.split(/( )/)
+    const allChars: HTMLElement[] = []
+
+    words.forEach((word) => {
+      if (word === ' ') {
+        // Space between words — allow line break here
+        const space = document.createElement('span')
+        space.textContent = '\u00A0'
+        space.style.display = 'inline-block'
+        space.style.opacity = '0'
+        space.style.transform = 'translateY(40px)'
+        space.setAttribute('aria-hidden', 'true')
+        el.appendChild(space)
+        allChars.push(space)
+        return
+      }
+
+      // Wrap each word in a nowrap container so characters don't split across lines
+      const wordWrap = document.createElement('span')
+      wordWrap.style.display = 'inline-block'
+      wordWrap.style.whiteSpace = 'nowrap'
+      wordWrap.setAttribute('aria-hidden', 'true')
+
+      word.split('').forEach((char) => {
+        const span = document.createElement('span')
+        span.textContent = char
+        span.style.display = 'inline-block'
+        span.style.opacity = '0'
+        span.style.transform = 'translateY(40px)'
+        wordWrap.appendChild(span)
+        allChars.push(span)
+      })
+
+      el.appendChild(wordWrap)
     })
 
     const tl = createTimeline({
@@ -67,7 +93,7 @@ export function useScrollAnimation() {
       },
     })
 
-    tl.to(chars, {
+    tl.to(allChars, {
       opacity: 1,
       y: 0,
       duration: 0.6,
