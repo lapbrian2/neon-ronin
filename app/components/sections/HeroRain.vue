@@ -102,7 +102,7 @@ onMounted(() => {
 
   if (charEls) {
     entrance.to(charEls, {
-      opacity: 1, y: 0, duration: 0.03, stagger: 0.04, ease: 'none',
+      opacity: 1, y: 0, duration: 0.35, stagger: 0.04, ease: 'power2.out',
     }, '-=1.0')
   }
 
@@ -110,12 +110,12 @@ onMounted(() => {
   const hitoPaths = kanjiSvgRef.value.querySelectorAll('.kanji-hito path')
 
   entrance.to(namiPaths, {
-    strokeDashoffset: 0, duration: 0.5, stagger: 0.07, ease: 'power2.inOut',
+    strokeDashoffset: 0, duration: 0.8, stagger: 0.1, ease: 'power2.inOut',
   }, '-=0.5')
 
   entrance.to(hitoPaths, {
-    strokeDashoffset: 0, duration: 0.6, stagger: 0.15, ease: 'power2.inOut',
-  }, '-=0.2')
+    strokeDashoffset: 0, duration: 1.0, stagger: 0.2, ease: 'power2.inOut',
+  }, '+=0.15')
 
   entrance.to(accentDotRef.value, {
     scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(3)',

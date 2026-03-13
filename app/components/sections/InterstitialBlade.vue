@@ -31,8 +31,8 @@ onMounted(() => {
   if (!sectionRef.value) return
 
   // Clip-path reveal: image expands from center
-  gsap.set(imageRef.value, { clipPath: 'inset(12% 20% 12% 20%)' })
-  gsap.set(contentRef.value, { opacity: 0, y: 30 })
+  gsap.set(imageRef.value, { clipPath: 'inset(0% 0% 100% 0%)' })
+  gsap.set(contentRef.value, { opacity: 0, y: -20, scale: 0.98 })
 
   // Image clip-path expands on scroll
   createTimeline({
@@ -51,7 +51,7 @@ onMounted(() => {
       start: 'top 50%',
       toggleActions: 'play none none none',
     },
-  }).to(contentRef.value, { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' })
+  }).to(contentRef.value, { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: 'power3.out' })
 
   // Parallax on image
   createTimeline({
@@ -66,7 +66,7 @@ onMounted(() => {
 <style scoped>
 .interstitial-blade {
   position: relative;
-  height: 50vh;
+  height: 40vh;
   min-height: 360px;
   overflow: hidden;
   display: flex;
@@ -85,7 +85,7 @@ onMounted(() => {
 }
 .ib-overlay {
   position: absolute; inset: 0;
-  background: rgba(10, 10, 15, 0.7);
+  background: rgba(10, 10, 15, 0.8);
 }
 
 .ib-content {

@@ -61,7 +61,7 @@ onMounted(() => {
   const rows = skillsRef.value?.querySelectorAll('.skill-row')
   if (rows) {
     rows.forEach((row: Element, i: number) => {
-      gsap.set(row, { opacity: 0, x: 60 + i * 20, rotateY: 5 })
+      gsap.set(row, { opacity: 0, y: 40 + i * 15 })
     })
   }
 
@@ -97,16 +97,35 @@ onMounted(() => {
       scrollTrigger: {
         trigger: skillsRef.value,
         start: 'top 80%',
-        end: 'bottom 60%',
+        end: 'bottom 40%',
         scrub: 0.5,
       },
     })
     rows.forEach((row: Element, i: number) => {
       scrubTl.to(row, {
-        opacity: 1, x: 0, rotateY: 0,
-        duration: 1, ease: 'power2.out',
+        opacity: 1, y: 0,
+        duration: 1, ease: 'none',
       }, i * 0.3)
     })
+  }
+
+  // Ink divider stroke-draw reveal
+  const dividerPath = sectionRef.value!.querySelector('.ink-divider-wrap path') as SVGPathElement | null
+  const dividerDot = sectionRef.value!.querySelector('.ink-divider-wrap circle')
+  if (dividerPath) {
+    const pathLen = dividerPath.getTotalLength()
+    gsap.set(dividerPath, { strokeDasharray: pathLen, strokeDashoffset: pathLen })
+    if (dividerDot) gsap.set(dividerDot, { attr: { r: 0 } })
+    const divTl = createTimeline({
+      scrollTrigger: {
+        trigger: sectionRef.value!.querySelector('.ink-divider-wrap'),
+        start: 'top 85%',
+        end: 'top 55%',
+        scrub: 0.5,
+      },
+    })
+    divTl.to(dividerPath, { strokeDashoffset: 0, ease: 'none' })
+    if (dividerDot) divTl.to(dividerDot, { attr: { r: 3 }, duration: 0.3, ease: 'back.out(3)' }, '-=0.1')
   }
 })
 </script>
@@ -137,13 +156,11 @@ onMounted(() => {
 }
 
 .skills-list {
-  perspective: 800px;
   margin-top: 60px;
 }
 
 .skill-row {
   display: flex;
-  transform-style: preserve-3d;
   align-items: center;
   justify-content: space-between;
   padding: 32px 0;

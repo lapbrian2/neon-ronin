@@ -120,6 +120,25 @@ onMounted(() => {
       start: 'top bottom', end: 'bottom top', scrub: 1,
     },
   }).to('.origin-cards', { y: -20, ease: 'none' })
+
+  // Ink divider stroke-draw reveal
+  const dividerPath = sectionRef.value!.querySelector('.ink-divider-wrap path') as SVGPathElement | null
+  const dividerDot = sectionRef.value!.querySelector('.ink-divider-wrap circle')
+  if (dividerPath) {
+    const pathLen = dividerPath.getTotalLength()
+    gsap.set(dividerPath, { strokeDasharray: pathLen, strokeDashoffset: pathLen })
+    if (dividerDot) gsap.set(dividerDot, { attr: { r: 0 } })
+    const divTl = createTimeline({
+      scrollTrigger: {
+        trigger: sectionRef.value!.querySelector('.ink-divider-wrap'),
+        start: 'top 85%',
+        end: 'top 55%',
+        scrub: 0.5,
+      },
+    })
+    divTl.to(dividerPath, { strokeDashoffset: 0, ease: 'none' })
+    if (dividerDot) divTl.to(dividerDot, { attr: { r: 3 }, duration: 0.3, ease: 'back.out(3)' }, '-=0.1')
+  }
 })
 </script>
 
