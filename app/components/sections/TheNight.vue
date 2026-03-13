@@ -18,9 +18,15 @@
           <div class="battle-card">
             <div class="battle-index">{{ String(i + 1).padStart(2, '0') }}</div>
             <div class="battle-divider" />
+            <h3 class="battle-name">{{ battle.name }}</h3>
             <p class="battle-statement">{{ battle.statement }}</p>
-            <div class="battle-tech">
-              <span v-for="(tag, j) in battle.tech" :key="j" class="tech-tag">{{ tag }}</span>
+            <div class="battle-footer">
+              <div class="battle-tech">
+                <span v-for="(tag, j) in battle.tech" :key="j" class="tech-tag">{{ tag }}</span>
+              </div>
+              <a v-if="battle.url" :href="battle.url" target="_blank" rel="noopener" class="battle-link" data-cursor>
+                View <span class="link-arrow">→</span>
+              </a>
             </div>
           </div>
         </div>
@@ -55,20 +61,28 @@ const { createTimeline, createTrigger, gsap, splitTextReveal, ScrollTrigger } = 
 
 const battles = [
   {
-    statement: 'Built virtual galleries where art breathes and walls dissolve as the viewer scrolls through space.',
+    name: 'ML Systems Universe',
+    statement: 'Built virtual galaxies where machine learning concepts orbit, connect, and reveal their relationships through scroll-driven 3D space.',
     tech: ['Three.js', 'WebGL', 'GSAP ScrollTrigger'],
+    url: 'https://ml-systems-universe.vercel.app/',
   },
   {
+    name: 'Murmuration',
     statement: 'Engineered particle simulations where thousands of autonomous agents flock, scatter, and self-organize into living digital art.',
     tech: ['Canvas 2D', 'Emergent Algorithms', 'Real-time Rendering'],
+    url: null,
   },
   {
+    name: 'Research Radar',
     statement: 'Trained autonomous agents to sweep the frontier — discovering breakthrough papers, emerging architectures, and practices that matter.',
     tech: ['Node.js', 'Notion API', 'LLM Pipelines'],
+    url: null,
   },
   {
+    name: 'Bomb the Web',
     statement: 'Crafted scroll-driven narratives where environment tells the story. The user moves through atmosphere, not past content.',
-    tech: ['Nuxt', 'Lenis', 'GSAP', 'CSS Architecture'],
+    tech: ['Three.js', 'GSAP', 'Canvas 2D', 'Web Audio'],
+    url: 'https://brian-lapinski-portfolio.vercel.app/',
   },
 ]
 
@@ -274,6 +288,15 @@ onMounted(() => {
   transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s;
 }
 
+.battle-name {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
 .battle-statement {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
@@ -284,10 +307,43 @@ onMounted(() => {
   margin-bottom: 32px;
 }
 
+.battle-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
 .battle-tech {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.battle-link {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-decoration: none;
+  opacity: 0.4;
+  transition: opacity 0.4s, color 0.4s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.battle-card:hover .battle-link {
+  opacity: 1;
+  color: var(--blood-red);
+}
+
+.link-arrow {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.battle-card:hover .link-arrow {
+  transform: translateX(3px);
 }
 
 .tech-tag {

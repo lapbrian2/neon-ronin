@@ -47,10 +47,10 @@ const skillsRef = ref<HTMLElement | null>(null)
 const { createTimeline, gsap, splitTextReveal } = useScrollAnimation()
 
 const skills = [
-  { name: 'Creative Engineering', desc: 'Where aesthetic instinct meets systematic execution. Building at the intersection of art direction and architecture.', kanji: '壱' },
+  { name: 'Creative Engineering', desc: 'Art direction with engineering discipline. Every pixel answers to both beauty and function.', kanji: '壱' },
   { name: 'Systems Architecture', desc: 'Lean methodology applied with the precision of iaijutsu. Process discipline forged in manufacturing, wielded in creative systems.', kanji: '弐' },
   { name: 'Immersive Web Worlds', desc: 'Three.js environments that breathe. Scroll-driven narratives where the user moves through space, not past content.', kanji: '参' },
-  { name: 'AI-Native Workflow', desc: 'Frameworks for building alongside machines. Not replacement — augmentation of creative instinct through agentic systems.', kanji: '肆' },
+  { name: 'AI-Native Workflow', desc: 'Building with AI as a first-class tool, not a parlor trick. Agentic systems that ship real work.', kanji: '肆' },
 ]
 
 onMounted(() => {
@@ -80,6 +80,17 @@ onMounted(() => {
     splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
   }
 
+  // Chapter number parallax
+  const chapterNum = sectionRef.value.querySelector('.chapter-num')
+  if (chapterNum) {
+    createTimeline({
+      scrollTrigger: {
+        trigger: sectionRef.value,
+        start: 'top bottom', end: 'bottom top', scrub: 1,
+      },
+    }).to(chapterNum, { y: -60, ease: 'none' })
+  }
+
   // Skill rows scrub in progressively as you scroll through
   if (rows) {
     const scrubTl = createTimeline({
@@ -104,7 +115,7 @@ onMounted(() => {
 .blade-section {
   padding: 120px 0;
   position: relative;
-  background: var(--cream);
+  background: #ede4d5;
   overflow: hidden;
 }
 

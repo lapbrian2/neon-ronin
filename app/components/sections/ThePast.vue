@@ -53,7 +53,7 @@ const headerRef = ref<HTMLElement | null>(null)
 const titleRef = ref<HTMLElement | null>(null)
 const principlesRef = ref<HTMLElement | null>(null)
 
-const { createTimeline, gsap, splitTextReveal } = useScrollAnimation()
+const { createTimeline, createTween, createTrigger, gsap, splitTextReveal } = useScrollAnimation()
 
 const principles = [
   {
@@ -69,7 +69,7 @@ const principles = [
   {
     kanji: '間',
     title: 'MA — Negative Space',
-    text: 'The space between elements carries meaning. Restraint is not absence — it is the silence that makes the note resonate.',
+    text: 'The space between elements carries meaning. What you leave out says more than what you put in.',
   },
 ]
 
@@ -119,6 +119,50 @@ onMounted(() => {
   if (titleRef.value) {
     splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
   }
+
+  // GSAP-driven marquee — speeds up with scroll velocity
+  const marqueeEl = sectionRef.value?.querySelector('.tech-marquee') as HTMLElement
+  if (marqueeEl) {
+    const baseTween = createTween(marqueeEl, {
+      xPercent: -50,
+      duration: 30,
+      ease: 'none',
+      repeat: -1,
+    })
+
+    createTrigger({
+      trigger: sectionRef.value!,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        const v = Math.min(Math.abs(self.getVelocity()) / 500, 3)
+        baseTween.timeScale(1 + v)
+      },
+      onLeave: () => { baseTween.timeScale(1) },
+      onLeaveBack: () => { baseTween.timeScale(1) },
+    })
+  }
+
+  // Parallax: watermark kanji drift faster than content
+  const chapterNum = sectionRef.value.querySelector('.chapter-num')
+  if (chapterNum) {
+    createTimeline({
+      scrollTrigger: {
+        trigger: sectionRef.value,
+        start: 'top bottom', end: 'bottom top', scrub: 1,
+      },
+    }).to(chapterNum, { y: -80, ease: 'none' })
+  }
+
+  // Principle kanji watermarks drift at their own speed
+  if (kanjiEls) {
+    createTimeline({
+      scrollTrigger: {
+        trigger: principlesRef.value,
+        start: 'top bottom', end: 'bottom top', scrub: 1,
+      },
+    }).to(kanjiEls, { y: -30, stagger: 0.1, ease: 'none' })
+  }
 })
 </script>
 
@@ -126,7 +170,7 @@ onMounted(() => {
 .code-section {
   padding: 120px 0 0;
   position: relative;
-  background: var(--cream);
+  background: #f0e8db;
 }
 
 .section-inner {
@@ -184,11 +228,7 @@ onMounted(() => {
 .tech-marquee {
   display: flex;
   width: max-content;
-  animation: marqueeScroll 30s linear infinite;
-}
 
-.tech-marquee:hover {
-  animation-play-state: paused;
 }
 
 .tech-marquee-track {
@@ -217,11 +257,6 @@ onMounted(() => {
   color: var(--blood-red);
   opacity: 0.4;
   margin-left: 16px;
-}
-
-@keyframes marqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
 }
 
 .ink-divider-wrap {

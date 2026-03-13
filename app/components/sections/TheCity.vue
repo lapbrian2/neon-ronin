@@ -101,6 +101,25 @@ onMounted(() => {
   if (titleRef.value) {
     splitTextReveal(titleRef.value, { trigger: sectionRef.value, start: 'top 75%' })
   }
+
+  // Parallax depth: chapter number drifts, cards float at different rate
+  const chapterNum = sectionRef.value.querySelector('.chapter-num')
+  if (chapterNum) {
+    createTimeline({
+      scrollTrigger: {
+        trigger: sectionRef.value,
+        start: 'top bottom', end: 'bottom top', scrub: 1,
+      },
+    }).to(chapterNum, { y: -60, ease: 'none' })
+  }
+
+  // Cards have subtle counter-float
+  createTimeline({
+    scrollTrigger: {
+      trigger: sectionRef.value,
+      start: 'top bottom', end: 'bottom top', scrub: 1,
+    },
+  }).to('.origin-cards', { y: -20, ease: 'none' })
 })
 </script>
 

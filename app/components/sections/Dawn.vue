@@ -24,12 +24,10 @@
 
       <div ref="bodyRef" class="road-body">
         <p class="body-text dark-body">
-          Every alliance begins with a single step in the same direction.
-          The ronin does not recruit — but the road ahead forks, and
-          some destinations demand more than one blade.
+          The ronin doesn't recruit. But some roads demand more than one blade.
         </p>
 
-        <a href="mailto:hello@ronin.art" class="road-cta" data-cursor>
+        <a href="mailto:brian@lapinski.dev" class="road-cta" data-cursor>
           <span class="cta-bg" />
           Walk together
           <span class="cta-arrow">→</span>
@@ -42,6 +40,10 @@
       <div class="footer-left">
         <div class="footer-kanji">浪人</div>
         <p class="footer-copy">浪人 — 2026</p>
+        <div class="footer-links">
+          <a href="https://github.com/lapbrian2" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+          <a href="https://linkedin.com/in/brian-lapinski" target="_blank" rel="noopener" class="footer-link">LinkedIn</a>
+        </div>
       </div>
       <p class="footer-quote">
         "The masterless blade walks on<br />
@@ -250,6 +252,27 @@ onMounted(() => {
   font-size: 11px;
   color: var(--mist);
   letter-spacing: 2px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.footer-link {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mist);
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.4s, color 0.4s;
+}
+
+.footer-link:hover {
+  opacity: 1;
+  color: var(--blood-red);
 }
 
 .footer-quote {
